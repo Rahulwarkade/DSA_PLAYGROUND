@@ -16,39 +16,37 @@ public class PlayGround
     }
     public static void main(String args[])
     {
-        int[] start = {1,3,0,5,8,5};
-        int[] end = {2,4,6,7,9,9};
-        int n = end.length;
-        int[][] activities = new int[n][3];
+        int[] value = {60,100,120};
+        int[] weight = {10,20,30};
+        int W = 50;
+        int n = value.length;
+        double[][] ratio = new double[n][2];
 
         for(int i=0; i<n; i++)
         {
-            activities[i][0] = i;
-            activities[i][1] = start[i];
-            activities[i][2] = end[i];
+            ratio[i][0] = i;
+            ratio[i][1] = (value[i]/weight[i]);
         }
 
-        Arrays.sort(activities,Comparator.comparingInt(row -> row[2]));
+        Arrays.sort(ratio,Comparator.comparingDouble(row -> row[1]));
 
-        ArrayList<String> ans = new ArrayList<>();
-        ans.add("A"+activities[0][0]);
-        int endTime = activities[0][2];
-        for(int i=1; i<n; i++)
+        int ans = 0;
+        for(int i=n-1; i>=0; i--)
         {
-            int startTime = activities[i][1];
-            if(endTime<=startTime)
+            int idx = (int)ratio[i][0];
+            if(weight[idx]<=W)
             {
-                ans.add("A"+activities[i][0]);
-                endTime = activities[i][2];
+                ans += value[idx];
+                W-=weight[idx];
+            }
+            else
+            {
+                ans += (ratio[i][1]*W);
+                W = 0;
+                break;
             }
         }
 
-        System.out.println(ans.size());
-
-        for(String str : ans)
-        {
-            System.out.println(str);
-        }
-        
+        System.out.println(ans);
     }
 }
