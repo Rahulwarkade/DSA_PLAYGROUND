@@ -16,37 +16,18 @@ public class PlayGround
     }
     public static void main(String args[])
     {
-        int[] value = {60,100,120};
-        int[] weight = {10,20,30};
-        int W = 50;
-        int n = value.length;
-        double[][] ratio = new double[n][2];
+        int[] A = {4,1,8,7};
+        int[] B = {2,3,6,5};
 
-        for(int i=0; i<n; i++)
+        Arrays.sort(A);
+        Arrays.sort(B);
+        int diff = 0;
+        for(int i=0; i<A.length; i++)
         {
-            ratio[i][0] = i;
-            ratio[i][1] = (value[i]/weight[i]);
+            int temp = A[i]-B[i];
+            diff += Math.abs(temp);
         }
 
-        Arrays.sort(ratio,Comparator.comparingDouble(row -> row[1]));
-
-        int ans = 0;
-        for(int i=n-1; i>=0; i--)
-        {
-            int idx = (int)ratio[i][0];
-            if(weight[idx]<=W)
-            {
-                ans += value[idx];
-                W-=weight[idx];
-            }
-            else
-            {
-                ans += (ratio[i][1]*W);
-                W = 0;
-                break;
-            }
-        }
-
-        System.out.println(ans);
+        System.out.println(diff);
     }
 }
