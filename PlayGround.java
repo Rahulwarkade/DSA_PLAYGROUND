@@ -2,6 +2,33 @@ import java.util.*;
 
 public class PlayGround
 {
+    public static class Node
+    {
+        int data;
+        Node left;
+        Node right;
+
+        public Node(int data)
+        {
+            this.data = data;
+            this.left = null;
+            this.right = null;
+        }
+    }
+    public static int idx = -1;
+    public static Node buildTree(int[] arr)
+    {
+        idx++;
+        if(arr[idx]==-1)
+        {
+            return null;
+        }
+
+        Node newNode = new Node(arr[idx]);
+        newNode.left = buildTree(arr);
+        newNode.right = buildTree(arr);
+        return newNode;
+    }
     public static void printArr(int[][] arr)
     {
         int n = arr.length,m = arr[0].length;
@@ -14,20 +41,26 @@ public class PlayGround
             System.out.println();
         }
     }
+
+    public static void preOrder(Node root)
+    {
+        if(root==null) return;
+        System.out.print(root.data+" ");
+        preOrder(root.left);
+        preOrder(root.right);
+    }
+    public static void fun(Node root)
+    {
+        root = root.left;
+        System.out.println(root);
+    }
     public static void main(String args[])
     {
-        int[] A = {4,1,8,7};
-        int[] B = {2,3,6,5};
+        int[] arr = {1,2,4,-1,-1,5,-1,-1,3,-1,6,-1,-1};
 
-        Arrays.sort(A);
-        Arrays.sort(B);
-        int diff = 0;
-        for(int i=0; i<A.length; i++)
-        {
-            int temp = A[i]-B[i];
-            diff += Math.abs(temp);
-        }
+        Node node = buildTree(arr);
 
-        System.out.println(diff);
+        preOrder(node);
+        postOrder(node);
     }
 }
