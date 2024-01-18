@@ -65,6 +65,31 @@ public class PlayGround
         System.out.print(root.data+" ");
         inOrder(root.right);
     }
+
+    public static void levelOrder(Node root)
+    {
+        Queue<Node> que = new LinkedList<>();
+
+        que.add(root);
+        que.add(null);
+        while(!que.isEmpty())
+        {
+            Node node = que.remove();
+            if(node==null)
+            {
+                System.out.println();
+                if(que.isEmpty()) break;
+                else que.add(null);
+            }
+            else{
+                System.out.print(node.data+" ");
+                if(node.left!=null)
+                    que.add(node.left);
+                if(node.right!=null)
+                    que.add(node.right);
+            }
+        }
+    }
     public static void main(String args[])
     {
         int[] arr = {1,2,4,-1,-1,5,-1,-1,3,-1,6,-1,-1};
@@ -76,5 +101,7 @@ public class PlayGround
         inOrder(node);
         System.out.println();
         postOrder(node);
+        System.out.println();
+        levelOrder(node);
     }
 }
