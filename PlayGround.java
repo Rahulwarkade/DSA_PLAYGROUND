@@ -46,18 +46,29 @@ public class PlayGround
         inOrder(node.right);
     }
 
-    public static int sumOfNodes(Node node)
+    public static int height(Node node)
     {
-        if(node == null) return 0;
-        return sumOfNodes(node.left) + sumOfNodes(node.right) + node.data;
+        if(node==null) return 0;
+        return Math.max(height(node.left),height(node.right)) + 1;
+    }
+    public static int diameterOfTree(Node node)
+    {
+        if(node==null) return 0;
+
+        int leftDiam = diameterOfTree(node.left);
+        int rightDiam = diameterOfTree(node.right);
+        int leftHeight = height(node.left);
+        int rightHeight = height(node.right);
+        int diameter = Math.max(leftHeight+rightHeight+1,Math.max(leftDiam,rightDiam));
+        return diameter;
     }
     public static void main(String args[])
     {
-        int[] arr = {1,2,4,-1,-1,5,-1,6,-1,7,-1,-1,3,-1,-1};
+        int[] arr = {1,2,4,-1,-1,5,-1,6,-1,-1,3,-1,-1};
 
         root = buildTree(arr);
         preOder(root);
         System.out.println();
-        System.out.println("Sum of Nodes In A Tree is = " + sumOfNodes(root));
+        System.out.println("Diameter of A Tree is = " + diameterOfTree(root));
     }
 }
