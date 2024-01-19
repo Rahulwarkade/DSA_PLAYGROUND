@@ -38,47 +38,57 @@ public class PlayGround
         preOder(node.right);
     }
 
-    public static boolean isIdentical(Node root1, Node subroot)
+    public static class Info
     {
-        if(root1==null && subroot == null)
+        Node node;
+        int horidistance;
+        public Info(Node node,int hd)
         {
-            return true;
-        }else if(root1==null || subroot==null || root1.data!=subroot.data)
-        {
-            return false;
+            this.node = node;
+            horidistance = hd;
         }
-        if(!isIdentical(root1.left, subroot.left))
-        {
-            return false;
-        }
-        if(!isIdentical(root1.right, subroot.right))
-        {
-            return false;
-        }
-        return true;
     }
 
-    public static boolean isSubTree(Node root1,Node subroot)
+    public static void topViewOfTree(Node node)
     {
-        if(root1==null) return false;
-        
-        if(root1.data == subroot.data)
+        Queue<Info> q = new LinkedList<Info>();
+        HashMap<Integer,Node> map = new HashMap<>();
+        q.add(new Info(node,0));
+        int min= Integer.MAX_VALUE;
+        int max = Integer.MIN_VALUE;
+        while(!q.isEmpty())
         {
-            if(isIdentical(root1,subroot)) return true;
+            Info currNode = q.remove();
+            if(currNode.node==null){
+                break;
+            }
+            int hd = currNode.horidistance;
+            if(!(map.containsKey(hd)))
+            {
+                map.put(currNode.horidistance,currNode.node);
+            }
+
+            if(currNode.node.left!=null){
+                q.add(new Info(currNode.node.left,currNode.horidistance-1));
+                min = Math.min(min,currNode.horidistance-1);
+            }
+            if(currNode.node.right!=null){
+                q.add(new Info(currNode.node.right,currNode.horidistance+1));
+                max = Math.max(max,currNode.horidistance+1);
+            }
         }
-        return isSubTree(root1.left, subroot) || isSubTree(root1.right, subroot);
+
+        for(int i=min; i<=max; i++)
+        {
+            System.out.print(map.get(i).data+" ");
+        }
     }
     public static void main(String args[])
     {
-        int[] tree = {1,2,4,-1,-1,5,-1,-1,3,-1,6,-1,-1};
-        int[] subtree = {2,4,-1,-1,5,-1,-1};
+        int[] tree = {1,2,3,-1,-1,4,-1,-1,6,5,-1,-1,7,-1,-1};
+
         root = buildTree(tree);
-        idx = -1;
-        Node subroot = buildTree(subtree);
-        preOder(root);
-        System.out.println();
-        preOder(subroot);
-        System.out.println();
-        System.out.println("Subtree of another Tree = " + isSubTree(root, subroot));
+
+        topViewOfTree(root);
     }
 }
