@@ -46,12 +46,10 @@ public class PlayGround
         inOrder(node.right);
     }
 
-    public static int heightOfTree(Node node)
+    public static int countOfNodes(Node node)
     {
-        if(node==null) return 0;
-        int lefth = heightOfTree(node.left);
-        int righth = heightOfTree(node.right);
-        return (Math.max(lefth,righth) + 1);
+        if(node == null) return 0;
+        return countOfNodes(node.left) + countOfNodes(node.right) + 1;
     }
     public static void main(String args[])
     {
@@ -60,6 +58,6 @@ public class PlayGround
         root = buildTree(arr);
         preOder(root);
         System.out.println();
-        System.out.println("Height of Tree is = " + heightOfTree(root));
+        System.out.println("Count of Nodes In A Tree is = " + countOfNodes(root));
     }
 }
