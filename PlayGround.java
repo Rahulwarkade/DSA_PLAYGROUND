@@ -37,47 +37,48 @@ public class PlayGround
         preOder(node.left);
         preOder(node.right);
     }
-    public static void inOrder(Node node)
-    {
-        if(node==null) return;
 
-        inOrder(node.left);
-        System.out.print(node.data+" ");
-        inOrder(node.right);
-    }
-    public static class Info
+    public static boolean isIdentical(Node root1, Node subroot)
     {
-        int diameter;
-        int height;
-        public Info(int height,int diameter)
+        if(root1==null && subroot == null)
         {
-            this.height = height;
-            this.diameter = diameter;
-        }
-    }
-    public static Info diameterOfTree(Node node)
-    {
-        if(node == null)
+            return true;
+        }else if(root1==null || subroot==null || root1.data!=subroot.data)
         {
-            return new Info(0,0);
+            return false;
         }
+        if(!isIdentical(root1.left, subroot.left))
+        {
+            return false;
+        }
+        if(!isIdentical(root1.right, subroot.right))
+        {
+            return false;
+        }
+        return true;
+    }
 
-        Info leftInfo = diameterOfTree(node.left);
-        Info rightInfo = diameterOfTree(node.right);
-
-        int height = Math.max(leftInfo.height,rightInfo.height) + 1;
-        int selfdiameter = leftInfo.height + rightInfo.height +1;
-        int diameter = Math.max(selfdiameter,Math.max(leftInfo.diameter,rightInfo.diameter));
-
-        return new Info(height,diameter);
+    public static boolean isSubTree(Node root1,Node subroot)
+    {
+        if(root1==null) return false;
+        
+        if(root1.data == subroot.data)
+        {
+            if(isIdentical(root1,subroot)) return true;
+        }
+        return isSubTree(root1.left, subroot) || isSubTree(root1.right, subroot);
     }
     public static void main(String args[])
     {
-        int[] arr = {1,2,4,-1,-1,5,-1,6,-1,7,-1,-1,3,-1,-1};
-
-        root = buildTree(arr);
+        int[] tree = {1,2,4,-1,-1,5,-1,-1,3,-1,6,-1,-1};
+        int[] subtree = {2,4,-1,-1,5,-1,-1};
+        root = buildTree(tree);
+        idx = -1;
+        Node subroot = buildTree(subtree);
         preOder(root);
         System.out.println();
-        System.out.println("Diameter of A Tree is = " + diameterOfTree(root).diameter);
+        preOder(subroot);
+        System.out.println();
+        System.out.println("Subtree of another Tree = " + isSubTree(root, subroot));
     }
 }
