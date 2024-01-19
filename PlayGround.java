@@ -107,27 +107,32 @@ public class PlayGround
         }
         return ans;
     }
-    public static int minCoins(Integer[][] jobs)
+    public static int minCoins(Integer[] coins,int amount)
     {
-        Arrays.sort(jobs, Comparator.comparingInt(row->row[1]));
+        Arrays.sort(coins, Comparator.reverseOrder());
         
 
-        int mxProfit = 0;
-        int time =0;
-        for(int i=jobs.length-1; i>=0; i--)
+        int minCoin = 0;
+        for(int i=0; i<coins.length; i++)
         {
-            if(jobs[i][0]>time)
+            if(coins[i]<=amount)
             {
-                mxProfit += jobs[i][1];
-                time++;
+                while(coins[i]<=amount)
+                {
+                    amount-=coins[i];
+                    minCoin++;
+                }
             }
         }
-        return mxProfit;
+        return minCoin;
     }
+
+
+
     public static void main(String args[])
     {
-       Integer[][] jobs = {{4,20},{1,10},{1,40},{1,30}};
+       
 
-       System.out.println(minCoins(jobs));
+       System.out.println(minCoins(coins,590));
     }
 }
