@@ -90,18 +90,27 @@ public class PlayGround
             }
         }
     }
+
+    public static int maxChainLen(int[][] pairs)
+    {
+        Arrays.sort(pairs,Comparator.comparingInt(row->row[1]));
+        int ans = 1;
+        int endTime = pairs[0][1];
+        for(int i=1; i<pairs.length; i++)
+        {
+            int startTime = pairs[i][0];
+            if(endTime<=startTime)
+            {
+                ans++;
+                endTime = pairs[i][1];
+            }
+        }
+        return ans;
+    }
     public static void main(String args[])
     {
-        int[] arr = {1,2,4,-1,-1,5,-1,-1,3,-1,6,-1,-1};
+       int[][] pairs = {{5,24},{39,50},{5,28},{27,38},{50,90}};
 
-        Node node = buildTree(arr);
-
-        preOrder(node);
-        System.out.println();
-        inOrder(node);
-        System.out.println();
-        postOrder(node);
-        System.out.println();
-        levelOrder(node);
+       System.out.println(maxChainLen(pairs));
     }
 }
