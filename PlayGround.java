@@ -107,10 +107,29 @@ public class PlayGround
         }
         return ans;
     }
+    public static int minCoins(Integer[] coins,int amount)
+    {
+        Arrays.sort(coins, Comparator.reverseOrder());
+        
+
+        int minCoin = 0;
+        for(int i=0; i<coins.length; i++)
+        {
+            if(coins[i]<=amount)
+            {
+                while(coins[i]<=amount)
+                {
+                    amount-=coins[i];
+                    minCoin++;
+                }
+            }
+        }
+        return minCoin;
+    }
     public static void main(String args[])
     {
-       int[][] pairs = {{5,24},{39,50},{5,28},{27,38},{50,90}};
+       Integer[] coins = {2,50,1,500,20,10,5,2000,100};
 
-       System.out.println(maxChainLen(pairs));
+       System.out.println(minCoins(coins,590));
     }
 }
