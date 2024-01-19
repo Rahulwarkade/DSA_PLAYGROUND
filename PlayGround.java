@@ -2,137 +2,47 @@ import java.util.*;
 
 public class PlayGround
 {
-    public static class Node
+    public static int chocola(Integer[] hor,Integer[] ver)
     {
-        int data;
-        Node left;
-        Node right;
-
-        public Node(int data)
+        int n = hor.length;
+        int m = ver.length;
+        Arrays.sort(hor,Comparator.reverseOrder());
+        Arrays.sort(ver,Comparator.reverseOrder());
+        int hc =0,vc=0;
+        int hp =1,vp =1;
+        int cost = 0;
+        while(hc<n && vc<m)
         {
-            this.data = data;
-            this.left = null;
-            this.right = null;
-        }
-    }
-    public static int idx = -1;
-    public static Node buildTree(int[] arr)
-    {
-        idx++;
-        if(arr[idx]==-1)
-        {
-            return null;
-        }
-
-        Node newNode = new Node(arr[idx]);
-        newNode.left = buildTree(arr);
-        newNode.right = buildTree(arr);
-        return newNode;
-    }
-    public static void printArr(int[][] arr)
-    {
-        int n = arr.length,m = arr[0].length;
-        for(int i=0; i<n; i++)
-        {
-            for(int j=0; j<m; j++)
+            if(hor[hc]>ver[vc])
             {
-                System.out.print(arr[i][j]+" ");
+                cost += (hor[hc]*hp);
+                hc++;
+                vp++;
+            }else{
+                cost += (ver[vc]*vp);
+                vc++;
+                hp++;
             }
-            System.out.println();
         }
-    }
-
-    public static void preOrder(Node root)
-    {
-        if(root==null) return;
-        System.out.print(root.data+" ");
-        preOrder(root.left);
-        preOrder(root.right);
-    }
-
-    public static void postOrder(Node root)
-    {
-        if(root==null) return;
-        postOrder(root.left);
-        postOrder(root.right);
-        System.out.print(root.data+" ");
-    }
-
-    public static void inOrder(Node root)
-    {
-        if(root==null)return;
-        inOrder(root.left);
-        System.out.print(root.data+" ");
-        inOrder(root.right);
-    }
-
-    public static void levelOrder(Node root)
-    {
-        Queue<Node> que = new LinkedList<>();
-
-        que.add(root);
-        que.add(null);
-        while(!que.isEmpty())
+        while(hc<n)
         {
-            Node node = que.remove();
-            if(node==null)
-            {
-                System.out.println();
-                if(que.isEmpty()) break;
-                else que.add(null);
-            }
-            else{
-                System.out.print(node.data+" ");
-                if(node.left!=null)
-                    que.add(node.left);
-                if(node.right!=null)
-                    que.add(node.right);
-            }
+            cost += (hor[hc]*hp);
+            hc++;
+            vp++;
         }
-    }
-
-    public static int maxChainLen(int[][] pairs)
-    {
-        Arrays.sort(pairs,Comparator.comparingInt(row->row[1]));
-        int ans = 1;
-        int endTime = pairs[0][1];
-        for(int i=1; i<pairs.length; i++)
+        while(vc<m)
         {
-            int startTime = pairs[i][0];
-            if(endTime<=startTime)
-            {
-                ans++;
-                endTime = pairs[i][1];
-            }
+            cost += (ver[vc]*vp);
+            vc++;
+            hp++;
         }
-        return ans;
+        return cost;
     }
-    public static int minCoins(Integer[] coins,int amount)
-    {
-        Arrays.sort(coins, Comparator.reverseOrder());
-        
-
-        int minCoin = 0;
-        for(int i=0; i<coins.length; i++)
-        {
-            if(coins[i]<=amount)
-            {
-                while(coins[i]<=amount)
-                {
-                    amount-=coins[i];
-                    minCoin++;
-                }
-            }
-        }
-        return minCoin;
-    }
-
-
-
     public static void main(String args[])
     {
-       
+       Integer[] horizontalcuts = {4,3,2,1,1};
+       Integer[] verticalcuts = {4,2,1};
 
-       System.out.println(minCoins(coins,590));
+       System.out.println(chocola(horizontalcuts,verticalcuts));
     }
 }
