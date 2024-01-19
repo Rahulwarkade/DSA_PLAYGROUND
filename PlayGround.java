@@ -38,50 +38,17 @@ public class PlayGround
         preOder(node.right);
     }
 
-    public static class Info
+    public static void kthLevelOfTree(Node node,int level,int k)
     {
-        Node node;
-        int horidistance;
-        public Info(Node node,int hd)
-        {
-            this.node = node;
-            horidistance = hd;
-        }
-    }
+        if(node==null) return;
 
-    public static void topViewOfTree(Node node)
-    {
-        Queue<Info> q = new LinkedList<Info>();
-        HashMap<Integer,Node> map = new HashMap<>();
-        q.add(new Info(node,0));
-        int min= Integer.MAX_VALUE;
-        int max = Integer.MIN_VALUE;
-        while(!q.isEmpty())
+        if(level==k)
         {
-            Info currNode = q.remove();
-            if(currNode.node==null){
-                break;
-            }
-            int hd = currNode.horidistance;
-            if(!(map.containsKey(hd)))
-            {
-                map.put(currNode.horidistance,currNode.node);
-            }
-
-            if(currNode.node.left!=null){
-                q.add(new Info(currNode.node.left,currNode.horidistance-1));
-                min = Math.min(min,currNode.horidistance-1);
-            }
-            if(currNode.node.right!=null){
-                q.add(new Info(currNode.node.right,currNode.horidistance+1));
-                max = Math.max(max,currNode.horidistance+1);
-            }
+            System.out.print(node.data+" ");
+            return;
         }
-
-        for(int i=min; i<=max; i++)
-        {
-            System.out.print(map.get(i).data+" ");
-        }
+        kthLevelOfTree(node.left,level+1,k);
+        kthLevelOfTree(node.right,level+1,k);
     }
     public static void main(String args[])
     {
@@ -89,6 +56,6 @@ public class PlayGround
 
         root = buildTree(tree);
 
-        topViewOfTree(root);
+        kthLevelOfTree(root,1,3);
     }
 }
