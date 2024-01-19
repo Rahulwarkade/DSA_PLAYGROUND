@@ -12,7 +12,5 @@ int main(){
     pair_array[2] = {3,3};
 
     for(int i =0; i<3; i++)
-        cout<<pair_array[i].first<<" "<<pair_array[i].second;
-    
-    
+        cout<<pair_array[i].first<<" "<<pair_array[i].second<<endl;
 }
