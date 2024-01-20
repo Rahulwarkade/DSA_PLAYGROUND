@@ -38,41 +38,25 @@ public class PlayGround
         preOder(node.right);
     }
 
-    public static boolean getPath(Node node, int n,ArrayList<Integer> path)
+    public static Node lca(Node node,int n1,int n2)
     {
-        if(node==null) return false;
-        path.add(node.data);
-        if(node.data == n) return true;
-        boolean lp = getPath(node.left,n,path);
-        boolean rp = getPath(node.right,n,path);
-        if(lp || rp) return true;
+        if(node==null || node.data == n1 || node.data== n2) return node;
 
-        path.remove(path.size()-1);
-        return false;
-    }
-    public static int lca(Node node,int a,int b)
-    {
-        if(node==null) return -1;
-        ArrayList<Integer> path1 = new ArrayList<>();
-        ArrayList<Integer> path2 = new ArrayList<>();
-        getPath(node,a,path1);
-        getPath(node,b,path2);
-        int n = Math.min(path1.size(),path2.size());
-        int i = 0;
-        for(; i<n; i++)
-        {
-            if(path1.get(i)!=path2.get(i))
-                break;
-        }
+        Node leftlca = lca(node.left,n1,n2);
+        Node rightlca = lca(node.right,n1,n2);
 
-        return path1.get(i-1);
-    }
+        if(leftlca==null) return rightlca;
+        if(rightlca==null) return leftlca;
+
+        return node;
+    }   
+
     public static void main(String args[])
     {
         int[] tree = {1,2,3,-1,-1,4,-1,-1,6,5,-1,-1,7,-1,-1};
 
         root = buildTree(tree);
 
-        System.out.println("Lowest Common Ancestor = "+ lca(root,4,3));
+        System.out.println("Lowest Common Ancestor = "+ lca(root,4,3).data);
     }
 }
