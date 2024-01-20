@@ -38,17 +38,34 @@ public class PlayGround
         preOder(node.right);
     }
 
-    public static void kthLevelOfTree(Node node,int level,int k)
+    public static boolean getPath(Node node, int n,ArrayList<Integer> path)
     {
-        if(node==null) return;
+        if(node==null) return false;
+        path.add(node.data);
+        if(node.data == n) return true;
+        boolean lp = getPath(node.left,n,path);
+        boolean rp = getPath(node.right,n,path);
+        if(lp || rp) return true;
 
-        if(level==k)
+        path.remove(path.size()-1);
+        return false;
+    }
+    public static int lca(Node node,int a,int b)
+    {
+        if(node==null) return -1;
+        ArrayList<Integer> path1 = new ArrayList<>();
+        ArrayList<Integer> path2 = new ArrayList<>();
+        getPath(node,a,path1);
+        getPath(node,b,path2);
+        int n = Math.min(path1.size(),path2.size());
+        int i = 0;
+        for(; i<n; i++)
         {
-            System.out.print(node.data+" ");
-            return;
+            if(path1.get(i)!=path2.get(i))
+                break;
         }
-        kthLevelOfTree(node.left,level+1,k);
-        kthLevelOfTree(node.right,level+1,k);
+
+        return path1.get(i-1);
     }
     public static void main(String args[])
     {
@@ -56,6 +73,6 @@ public class PlayGround
 
         root = buildTree(tree);
 
-        kthLevelOfTree(root,1,3);
+        System.out.println("Lowest Common Ancestor = "+ lca(root,4,3));
     }
 }
