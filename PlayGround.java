@@ -50,28 +50,28 @@ public class PlayGround
         
         return node;
     }
-    public static int dist(Node ancestor,int n)
-    {
-        if(ancestor==null) return -1;
-        if(ancestor.data==n) return 0;
-
-        int leftdist = dist(ancestor.left,n);
-        int rightdist = dist(ancestor.right,n);
-        if(leftdist!=-1)
-        {
-            return leftdist+1;
-        }
-        if(rightdist!=-1){
-            return rightdist+1;
-        }
-        return -1;
-    }
-    public static int minDist(Node node,int n1,int n2)
+    public static int kthAnc = -1;
+    public static int kthAncestor(Node node, int value, int k)
     {
         if(node==null) return -1;
-        Node ancestor = lca(node,n1,n2);
-
-        return dist(ancestor,n1)+dist(ancestor,n2);
+        if(node.data==value) return 0;
+        int leftAncestor = kthAncestor(node.left, value,k);
+        int rightAncestor = kthAncestor(node.right, value,k);
+        if(leftAncestor!=-1)
+        {
+            if(leftAncestor+1==k)
+            {
+                kthAnc = node.data;
+            }
+        }
+        if(rightAncestor!=-1)
+        {
+            if(rightAncestor+1==k)
+            {
+                kthAnc = node.data;
+            }
+        }
+        return kthAnc;
     }
     public static void main(String args[])
     {
@@ -79,6 +79,6 @@ public class PlayGround
 
         root = buildTree(tree);
 
-        System.out.println("Min Distance b/w Nodes = "+ minDist(root,4,5));
+        System.out.println("Min Distance b/w Nodes = "+ kthAncestor(root, 5, 1));
     }
 }
