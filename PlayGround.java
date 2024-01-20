@@ -29,56 +29,33 @@ public class PlayGround
         return newNode;
     }
 
-    public static void preOder(Node node)
+    public static int transformToSumTree(Node node)
+    {
+        if(node==null) return 0;
+
+        int leftchild = transformToSumTree(node.left);
+        int rightchild = transformToSumTree(node.right);
+        int data = node.data;
+        int newLeft = node.left!=null?node.left.data : 0;
+        int newRight = node.right!=null?node.right.data : 0;
+        node.data = leftchild+rightchild+newLeft+newRight;
+        return data;
+    }
+    public static void preOrder(Node node)
     {
         if(node==null) return;
-
         System.out.print(node.data+" ");
-        preOder(node.left);
-        preOder(node.right);
-    }
-
-    public static Node lca(Node node,int n1,int n2)
-    {
-        if(node==null || node.data==n1 || node.data==n2) return node;
-
-        Node leftlca = lca(node.left,n1,n2);
-        Node rightlca = lca(node.right,n1,n2);
-
-        if(leftlca==null) return rightlca;
-        if(rightlca==null) return leftlca;
-        
-        return node;
-    }
-    public static int kthAnc = -1;
-    public static int kthAncestor(Node node, int value, int k)
-    {
-        if(node==null) return -1;
-        if(node.data==value) return 0;
-        int leftAncestor = kthAncestor(node.left, value,k);
-        int rightAncestor = kthAncestor(node.right, value,k);
-        if(leftAncestor!=-1)
-        {
-            if(leftAncestor+1==k)
-            {
-                kthAnc = node.data;
-            }
-        }
-        if(rightAncestor!=-1)
-        {
-            if(rightAncestor+1==k)
-            {
-                kthAnc = node.data;
-            }
-        }
-        return kthAnc;
+        preOrder(node.left);
+        preOrder(node.right);
     }
     public static void main(String args[])
     {
-        int[] tree = {1,2,3,-1,-1,4,-1,-1,6,5,-1,-1,7,-1,-1};
+        int[] tree = {1,2,4,-1,-1,5,-1,-1,3,6,-1,-1,7,-1,-1};
 
         root = buildTree(tree);
 
-        System.out.println("Min Distance b/w Nodes = "+ kthAncestor(root, 5, 1));
+        transformToSumTree(root);
+
+        preOrder(root);
     }
 }
