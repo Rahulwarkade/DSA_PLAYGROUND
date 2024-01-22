@@ -15,43 +15,45 @@ public class PlayGround
             this.right = null;
         }
     }
-    public static Node root;
-    public static int idx = -1;
-    public static Node buildTree(int[] arr)
+
+    public static Node insert(Node root,int data)
     {
-        idx++;
-        if(arr[idx]==-1) return null;
+        if(root==null)
+        {
+            root = new Node(data);
+            return root;
+        }
 
-        Node newNode = new Node(arr[idx]);
-        newNode.left = buildTree(arr);
-        newNode.right = buildTree(arr);
-
-        return newNode;
+        if(root.data>data)
+        {
+            root.left = insert(root.left,data);
+        }
+        else
+        {
+            root.right = insert(root.right,data);
+        }
+        return root;
     }
 
-    public static int transformToSumTree(Node node)
+    public static void inOrder(Node root)
     {
-        if(node==null) return 0;
+        if(root==null) return;
+        inOrder(root.left);
+        System.out.print(root.data+" ");
+        inOrder(root.right);
+    }
 
-        int leftchild = transformToSumTree(node.left);
-        int rightchild = transformToSumTree(node.right);
-        int data = node.data;
-        int newLeft = node.left!=null?node.left.data : 0;
-        int newRight = node.right!=null?node.right.data : 0;
-        node.data = leftchild+rightchild+newLeft+newRight;
-        return data;
-    }
-    public static void preOrder(Node node)
-    {
-        if(node==null) return;
-        System.out.print(node.data+" ");
-        preOrder(node.left);
-        preOrder(node.right);
-    }
     public static void main(String args[])
     {
-        int[] tree = {1,2,4,-1,-1,5,-1,-1,3,6,-1,-1,7,-1,-1};
+        int[] tree = {5,1,3,4,2,7};
 
-        root = buildTree(tree);
+        Node root = null;
+
+        for(int i=0; i<tree.length; i++)
+        {
+            root = insert(root,tree[i]);
+        }
+
+        inOrder(root);
     }
 }
