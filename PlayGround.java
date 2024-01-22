@@ -70,7 +70,7 @@ public class PlayGround
             root = insert(root,tree[i]);
         }
 
-        System.out.println("Element found = "+ searchInBst(root,7));
+        System.out.println("Element found = "+ searchInBst(root,4));
 
         inOrder(root);
     }
