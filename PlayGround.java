@@ -1,4 +1,4 @@
-// import java.util.*;
+import java.util.*;
 
 public class PlayGround
 {
@@ -43,25 +43,23 @@ public class PlayGround
         inOrder(root.right);
     }
 
-    public static void printInRange(Node root,int k1,int k2)
+    public static void rootToLeaf(Node root,ArrayList<Integer> list)
     {
         if(root==null) return;
-        if(root.data>=k1 && root.data<=k2)
+        if(root.left==null && root.right==null)
         {
-            printInRange(root.left,k1,k2);
-            System.out.print(root.data+" ");
-            printInRange(root.right,k1,k2);
+            list.add(root.data);
+            int n = list.size();
+            for(int i=0; i<n; i++)
+                System.out.print(list.get(i)+" ");
+            System.out.println();
+            return;
         }
-        else if(root.data<k1)
-        {
-            printInRange(root.right,k1,k2);
-        }
-        else if(root.data>k2)
-        {
-            printInRange(root.left,k1,k2);
-        }
+        list.add(root.data);
+        rootToLeaf(root.left, list);
+        rootToLeaf(root.right, list);
+        list.remove(list.size()-1);
     }
-
     public static void main(String args[])
     {
         int[] tree = {8,5,10,3,6,11,1,4,14};
@@ -75,6 +73,6 @@ public class PlayGround
 
         inOrder(root);
         System.out.println();
-        printInRange(root, 6, 12);
+        rootToLeaf(root, new ArrayList<Integer>());
     }
 }
