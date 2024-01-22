@@ -43,6 +43,22 @@ public class PlayGround
         inOrder(root.right);
     }
 
+    public static boolean searchInBst(Node root,int ele)
+    {
+        if(root==null) return false;
+        if(root.data==ele)
+        {
+            return true;
+        }
+        if(root.data<ele)
+        {
+           return searchInBst(root.right,ele);
+        }
+        else{
+            return searchInBst(root.left,ele);
+        }
+
+    }
     public static void main(String args[])
     {
         int[] tree = {5,1,3,4,2,7};
@@ -53,6 +69,8 @@ public class PlayGround
         {
             root = insert(root,tree[i]);
         }
+
+        System.out.println("Element found = "+ searchInBst(root,7));
 
         inOrder(root);
     }
