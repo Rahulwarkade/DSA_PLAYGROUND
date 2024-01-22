@@ -43,25 +43,49 @@ public class PlayGround
         inOrder(root.right);
     }
 
-    public static boolean searchInBst(Node root,int ele)
+    public static void preOrder(Node root)
     {
-        if(root==null) return false;
-        if(root.data==ele)
+        if(root==null) return;
+        System.out.print(root.data+" ");
+        preOrder(root.left);
+        preOrder(root.right);
+    }
+    public static Node findInOrderSuccessor(Node root)
+    {
+        while(root.left!=null)
         {
-            return true;
+            root = root.left;
         }
-        if(root.data<ele)
-        {
-           return searchInBst(root.right,ele);
-        }
-        else{
-            return searchInBst(root.left,ele);
-        }
+        return root;
+    }
 
+    public static Node delete(Node root,int key)
+    {
+        if(root.data == key)
+        {
+            if(root.left == null && root.right ==null) return null;
+
+            if(root.left==null) return root.right;
+
+            if(root.right==null) return root.left;
+
+            Node inOrderSuccessor = findInOrderSuccessor(root.right);
+            root.data = inOrderSuccessor.data;
+            root.right = delete(root.right,inOrderSuccessor.data);
+        }
+        else if(root.data<key)
+        {
+            root.right = delete(root.right,key);
+        }
+        else
+        {
+            root.left = delete(root.left,key);
+        }
+        return root;
     }
     public static void main(String args[])
     {
-        int[] tree = {5,1,3,4,2,7};
+        int[] tree = {8,5,10,3,6,11,1,4,14};
 
         Node root = null;
 
@@ -70,8 +94,9 @@ public class PlayGround
             root = insert(root,tree[i]);
         }
 
-        System.out.println("Element found = "+ searchInBst(root,4));
-
+        root = delete(root,8);
+        preOrder(root);
+        System.out.println();
         inOrder(root);
     }
 }
