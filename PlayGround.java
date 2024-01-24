@@ -16,25 +16,33 @@ public class PlayGround
         }
     }
 
-    public static Node insert(Node root,int data)
-    {
-        if(root==null)
-        {
-            root = new Node(data);
-            return root;
-        }
+    public static Node root;
+    public static int idx = -1;
 
-        if(root.data>data)
-        {
-            root.left = insert(root.left,data);
-        }
-        else
-        {
-            root.right = insert(root.right,data);
-        }
-        return root;
+    public static Node buildBT(int[] tree)
+    {
+        idx++;
+        if(tree[idx]==-1) return null;
+        Node node = new Node(tree[idx]);
+        node.left = buildBT(tree);
+        node.right = buildBT(tree);
+        return node;
     }
 
+    public static class Info
+    {
+        boolean isbst;
+        int size;
+        int max;
+        int min;
+        public Info(boolean isbst,int size,int max,int min)
+        {
+            this.isbst = isbst;
+            this.size = size;
+            this.max = max;
+            this.min = min;
+        }
+    }
     public static void inOrder(Node root)
     {
         if(root==null) return;
@@ -49,73 +57,37 @@ public class PlayGround
         preOrder(root.left);
         preOrder(root.right);
     }
+    public static int bstSize = 0;
+    public static Info largestBST(Node root)
+    {   
+        if(root == null ) return new Info(true,0,Integer.MIN_VALUE,Integer.MAX_VALUE);
 
-    public static void getInOrder(Node root,ArrayList<Integer> inorder)
-    {
-        if(root==null) return;
-        getInOrder(root.left,inorder);
-        inorder.add(root.data);
-        getInOrder(root.right,inorder);
-    }
+        Info leftinfo = largestBST(root.left);
+        Info rightinfo = largestBST(root.right);
+        int size = leftinfo.size + rightinfo.size +1;
+        int min = Math.min(root.data,Math.min(leftinfo.min,rightinfo.min));
+        int max = Math.max(root.data,Math.max(leftinfo.max,rightinfo.max));
 
-    public static Node balancedBST(ArrayList<Integer> inorder,int si,int ei)
-    {
-        if(si>ei) return null;
-        int mid = si+((ei-si)>>1);
-        Node root = new Node(inorder.get(mid));
-        root.left = balancedBST(inorder,si,mid-1);
-        root.right = balancedBST(inorder,mid+1,ei);
-        return root;
-    }
-
-    public static ArrayList<Integer> merge(ArrayList<Integer> list1,ArrayList<Integer> list2)
-    {
-        ArrayList<Integer> sorted = new ArrayList<>();
-        int i =0;
-        int j = 0;
-        while(i<list1.size() && j<list2.size()){
-
-            if((list1.get(i)<list2.get(j))){
-                sorted.add(list1.get(i++));
-            }
-            else{
-                sorted.add(list2.get(j++));
-            }
-        }
-        while(i<list1.size()) {
-            sorted.add(list1.get(i++));
-        }
-        while(j<list2.size()) 
+        if(root.data<leftinfo.max || root.data>rightinfo.min)
         {
-            sorted.add(list2.get(j++));
+            return new Info(false,size,max,min);
         }
-        return sorted;
+        if(leftinfo.isbst && rightinfo.isbst)
+        {
+            bstSize = Math.max(bstSize,size);
+            return new Info(true,size,max,min);
+        }
+
+        return new Info(false,size,max,min);
+        
     }
     public static void main(String args[])
     {
-        int[] tree = {1,2,4};
-        int[] tree2 = {9,3,12};
+        int[] tree = {50,30,5,-1,-1,20,-1,-1,60,45,-1,-1,70,65,-1,-1,80,-1,-1};
 
-        Node root = null;
-        Node root2 = null;
-
-        for(int i=0; i<tree.length; i++)
-        {                                                        
-            root = insert(root,tree[i]);
-        }
-        for(int i=0; i<tree2.length; i++)
-        {                                                        
-            root2 = insert(root2,tree2[i]);
-        }
-
-        ArrayList<Integer> inorder = new ArrayList<>();
-        ArrayList<Integer> inorder2 = new ArrayList<>();
-        getInOrder(root,inorder);
-        getInOrder(root2,inorder2);
-
-        ArrayList<Integer> sorted = merge(inorder,inorder2);
-        root = balancedBST(sorted,0,sorted.size()-1);
-        System.out.println();
+        root = buildBT(tree);
+        largestBST(root);
+        System.out.println(bstSize);
         preOrder(root);
     }
 }
