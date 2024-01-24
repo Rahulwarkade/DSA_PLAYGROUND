@@ -44,15 +44,17 @@ public class PlayGround
     }
 
 
-    public static boolean validateBST(Node root,Node min,Node max)
+    public static Node mirrorBST(Node root)
     {
-        if(root==null) return true;
+        if(root==null) return null;
 
-        if(min!=null && root.data<=min.data) return false;
-        if(max!=null && root.data>=max.data) return false;
-
-        return validateBST(root.left,min,root) && validateBST(root.right,root,max);
+        Node leftRoot = mirrorBST(root.left);
+        Node rightRoot = mirrorBST(root.right);
+        root.left = rightRoot;
+        root.right = leftRoot;
+        return root;
     }
+ 
     public static void main(String args[])
     {
         int[] tree = {8,5,10,3,6,11,1,4,14,8};
@@ -66,12 +68,8 @@ public class PlayGround
 
         inOrder(root);
         System.out.println();
-        
-        if(validateBST(root,null,null))
-        {
-            System.out.println("Valid BST");
-        }else{
-            System.out.println("Invalid BST");
-        }
+        root = mirrorBST(root);
+        inOrder(root);
+
     }
 }
