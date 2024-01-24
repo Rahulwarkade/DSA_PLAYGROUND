@@ -43,26 +43,19 @@ public class PlayGround
         inOrder(root.right);
     }
 
-    public static void rootToLeaf(Node root,ArrayList<Integer> list)
+
+    public static boolean validateBST(Node root,Node min,Node max)
     {
-        if(root==null) return;
-        if(root.left==null && root.right==null)
-        {
-            list.add(root.data);
-            int n = list.size();
-            for(int i=0; i<n; i++)
-                System.out.print(list.get(i)+" ");
-            System.out.println();
-            return;
-        }
-        list.add(root.data);
-        rootToLeaf(root.left, list);
-        rootToLeaf(root.right, list);
-        list.remove(list.size()-1);
+        if(root==null) return true;
+
+        if(min!=null && root.data<=min.data) return false;
+        if(max!=null && root.data>=max.data) return false;
+
+        return validateBST(root.left,min,root) && validateBST(root.right,root,max);
     }
     public static void main(String args[])
     {
-        int[] tree = {8,5,10,3,6,11,1,4,14};
+        int[] tree = {8,5,10,3,6,11,1,4,14,8};
 
         Node root = null;
 
@@ -73,6 +66,12 @@ public class PlayGround
 
         inOrder(root);
         System.out.println();
-        rootToLeaf(root, new ArrayList<Integer>());
+        
+        if(validateBST(root,null,null))
+        {
+            System.out.println("Valid BST");
+        }else{
+            System.out.println("Invalid BST");
+        }
     }
 }
