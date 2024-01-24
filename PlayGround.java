@@ -50,13 +50,21 @@ public class PlayGround
         preOrder(root.right);
     }
 
-    public static Node createBST(int tree[],int si,int ei)
+    public static void getInOrder(Node root,ArrayList<Integer> inorder)
+    {
+        if(root==null) return;
+        getInOrder(root.left,inorder);
+        inorder.add(root.data);
+        getInOrder(root.right,inorder);
+    }
+
+    public static Node balancedBST(ArrayList<Integer> inorder,int si,int ei)
     {
         if(si>ei) return null;
         int mid = si+((ei-si)>>1);
-        Node root = new Node(tree[mid]);
-        root.left = createBST(tree,si,mid-1);
-        root.right = createBST(tree,mid+1,ei);
+        Node root = new Node(inorder.get(mid));
+        root.left = balancedBST(inorder,si,mid-1);
+        root.right = balancedBST(inorder,mid+1,ei);
         return root;
     }
     public static void main(String args[])
@@ -71,8 +79,10 @@ public class PlayGround
         }
 
         inOrder(root);
-        System.out.println();
-        root = createBST(tree,0,tree.length-1);
+        ArrayList<Integer> inorder = new ArrayList<>();
+        getInOrder(root,inorder);
+        System.out.println(inorder);
+        root = balancedBST(inorder,0,inorder.size()-1);
         preOrder(root);
     }
 }
