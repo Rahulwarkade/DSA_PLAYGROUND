@@ -42,22 +42,26 @@ public class PlayGround
         System.out.print(root.data+" ");
         inOrder(root.right);
     }
-
-
-    public static Node mirrorBST(Node root)
+    public static void preOrder(Node root)
     {
-        if(root==null) return null;
+        if(root==null) return;
+        System.out.print(root.data+" ");
+        preOrder(root.left);
+        preOrder(root.right);
+    }
 
-        Node leftRoot = mirrorBST(root.left);
-        Node rightRoot = mirrorBST(root.right);
-        root.left = rightRoot;
-        root.right = leftRoot;
+    public static Node createBST(int tree[],int si,int ei)
+    {
+        if(si>ei) return null;
+        int mid = si+((ei-si)>>1);
+        Node root = new Node(tree[mid]);
+        root.left = createBST(tree,si,mid-1);
+        root.right = createBST(tree,mid+1,ei);
         return root;
     }
- 
     public static void main(String args[])
     {
-        int[] tree = {8,5,10,3,6,11,1,4,14,8};
+        int[] tree = {3,5,6,8,10,11,12};
 
         Node root = null;
 
@@ -68,8 +72,7 @@ public class PlayGround
 
         inOrder(root);
         System.out.println();
-        root = mirrorBST(root);
-        inOrder(root);
-
+        root = createBST(tree,0,tree.length-1);
+        preOrder(root);
     }
 }
