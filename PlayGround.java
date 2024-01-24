@@ -67,19 +67,55 @@ public class PlayGround
         root.right = balancedBST(inorder,mid+1,ei);
         return root;
     }
+
+    public static ArrayList<Integer> merge(ArrayList<Integer> list1,ArrayList<Integer> list2)
+    {
+        ArrayList<Integer> sorted = new ArrayList<>();
+        int i =0;
+        int j = 0;
+        while(i<list1.size() && j<list2.size()){
+
+            if((list1.get(i)<list2.get(j))){
+                sorted.add(list1.get(i++));
+            }
+            else{
+                sorted.add(list2.get(j++));
+            }
+        }
+        while(i<list1.size()) {
+            sorted.add(list1.get(i++));
+        }
+        while(j<list2.size()) 
+        {
+            sorted.add(list2.get(j++));
+        }
+        return sorted;
+    }
     public static void main(String args[])
     {
-        int[] tree = {3,5,6,8,10,11,12};
+        int[] tree = {1,2,4};
+        int[] tree2 = {9,3,12};
 
         Node root = null;
+        Node root2 = null;
 
         for(int i=0; i<tree.length; i++)
         {                                                        
             root = insert(root,tree[i]);
         }
+        for(int i=0; i<tree2.length; i++)
+        {                                                        
+            root2 = insert(root2,tree2[i]);
+        }
 
         ArrayList<Integer> inorder = new ArrayList<>();
+        ArrayList<Integer> inorder2 = new ArrayList<>();
         getInOrder(root,inorder);
-        root = balancedBST(inorder,0,inorder.size()-1);
+        getInOrder(root2,inorder2);
+
+        ArrayList<Integer> sorted = merge(inorder,inorder2);
+        root = balancedBST(sorted,0,sorted.size()-1);
+        System.out.println();
+        preOrder(root);
     }
 }
