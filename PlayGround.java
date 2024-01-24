@@ -74,15 +74,12 @@ public class PlayGround
         Node root = null;
 
         for(int i=0; i<tree.length; i++)
-        {
+        {                                                        
             root = insert(root,tree[i]);
         }
 
-        inOrder(root);
         ArrayList<Integer> inorder = new ArrayList<>();
         getInOrder(root,inorder);
-        System.out.println(inorder);
         root = balancedBST(inorder,0,inorder.size()-1);
-        preOrder(root);
     }
 }
