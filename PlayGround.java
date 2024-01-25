@@ -2,56 +2,42 @@ import java.util.*;
 
 public class PlayGround
 {  
-    public static void heapify(int[] arr,int idx,int size)
+    public static class Point implements Comparable<Point>
     {
-        int maxIdx = idx;
-        int leftIdx = (2*idx)+1;
-        int rightIdx = (2*idx)+2;
-
-        if(leftIdx<size && arr[leftIdx]>arr[maxIdx])
+        int x;
+        int y;
+        int dist;
+        int idx;
+        public Point(int x,int y,int dist,int idx)
         {
-            maxIdx = leftIdx;
+            this.x = x;
+            this.y = y;
+            this.dist = dist;
+            this.idx = idx;
         }
 
-        if(rightIdx<size && arr[rightIdx]>arr[maxIdx])
+        @Override
+        public int compareTo(Point obj2)
         {
-            maxIdx = rightIdx;
+            return this.dist - obj2.dist;
         }
-
-        if(maxIdx!=idx)
-        {
-            int temp = arr[idx];
-            arr[idx] = arr[maxIdx];
-            arr[maxIdx] = temp;
-
-            heapify(arr,maxIdx,size);
-        }
-    }
-    public static void heapSort(int[] arr)
-    {
-        int n = arr.length;
-
-        for(int i=n/2; i>=0; i--)
-        {
-            heapify(arr,i,n);
-        }
-
-        for(int i=n-1; i>=0; i--)
-        {
-            int temp = arr[i];
-            arr[i] = arr[0];
-            arr[0] = temp;
-            heapify(arr,0,i);
-        }
-
     }
     public static void main(String args[])
     {
-        int[] arr = {1,2,4,5,3};
+        int[][] arr = {{3,3},{5,-1},{-2,4}};
+        int k = 2;
 
-        heapSort(arr);
+        PriorityQueue<Point> pq = new PriorityQueue<>();
 
-        for(int value : arr)
-            System.out.print(value+" ");
+        for(int i=0; i<arr.length; i++)
+        {
+            int x= arr[i][0];
+            int y = arr[i][1];
+            int dist = x*x + y*y;
+            pq.add(new Point(x,y,dist,i));
+        }
+
+        for(int i=0; i<k; i++)
+            System.out.println("C"+pq.remove().idx);
     }
 }
