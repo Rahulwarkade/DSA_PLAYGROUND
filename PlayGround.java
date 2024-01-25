@@ -1,80 +1,7 @@
 import java.util.*;
 
 public class PlayGround
-{   
-    public static class Heap
-    {
-        ArrayList<Integer> list = new ArrayList<>();
-
-        private void heapify(int idx)
-        {
-            int minIdx = idx;
-            int leftIdx = (2*minIdx)+1;
-            int rightIdx = (2*minIdx)+2;
-
-            if(leftIdx<list.size() && list.get(leftIdx)<list.get(minIdx))
-            {
-                minIdx = leftIdx;
-            }
-            if(rightIdx<list.size() && list.get(rightIdx)<list.get(minIdx))
-            {
-                minIdx = rightIdx;
-            }
-
-            if(minIdx!=idx)
-            {
-                int temp = list.get(idx);
-                list.set(idx,list.get(minIdx));
-                list.set(minIdx,temp);
-                heapify(minIdx);
-            }
-        }
-
-        boolean isEmpty()
-        {
-            if(list.size()>0) return false;
-            return true;
-        }
-        void add(int value)
-        {
-            list.add(value);
-
-            int x = list.size()-1;
-            int y = (x-1)/2;
-
-            while(list.get(y)>list.get(x))
-            {
-                int temp = list.get(y);
-                list.set(y,list.get(x));
-                list.set(x,temp);
-                
-                x = y;
-                y = (x-1)/2;
-            }
-        }
-
-        int peek()
-        {
-            if(isEmpty()) return -1;
-            return list.get(0);
-        }
-
-        int remove()
-        {
-            if(isEmpty()) return -1;
-            int value = list.get(0);
-            
-            int li = list.size()-1;
-            list.set(0,list.get(li));
-            list.set(li,value);
-
-            list.remove(li);
-
-            heapify(0);
-            return value;
-        }
-    }
-
+{  
     public static void heapify(int[] arr,int idx,int size)
     {
         int maxIdx = idx;
@@ -100,9 +27,31 @@ public class PlayGround
             heapify(arr,maxIdx,size);
         }
     }
+    public static void heapSort(int[] arr)
+    {
+        int n = arr.length;
 
+        for(int i=n/2; i>=0; i--)
+        {
+            heapify(arr,i,n);
+        }
+
+        for(int i=n-1; i>=0; i--)
+        {
+            int temp = arr[i];
+            arr[i] = arr[0];
+            arr[0] = temp;
+            heapify(arr,0,i);
+        }
+
+    }
     public static void main(String args[])
     {
+        int[] arr = {1,2,4,5,3};
 
+        heapSort(arr);
+
+        for(int value : arr)
+            System.out.print(value+" ");
     }
 }
