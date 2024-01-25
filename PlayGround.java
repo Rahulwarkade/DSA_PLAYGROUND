@@ -1,122 +1,108 @@
 import java.util.*;
 
 public class PlayGround
-{
-    public static class Node
+{   
+    public static class Heap
     {
-        int data;
-        int height;
-        Node left;
-        Node right;
+        ArrayList<Integer> list = new ArrayList<>();
 
-        public Node(int data)
+        private void heapify(int idx)
         {
-            this.data = data;
-            this.height = 1;
-            this.left = null;
-            this.right = null;
+            int minIdx = idx;
+            int leftIdx = (2*minIdx)+1;
+            int rightIdx = (2*minIdx)+2;
+
+            if(leftIdx<list.size() && list.get(leftIdx)<list.get(minIdx))
+            {
+                minIdx = leftIdx;
+            }
+            if(rightIdx<list.size() && list.get(rightIdx)<list.get(minIdx))
+            {
+                minIdx = rightIdx;
+            }
+
+            if(minIdx!=idx)
+            {
+                int temp = list.get(idx);
+                list.set(idx,list.get(minIdx));
+                list.set(minIdx,temp);
+                heapify(minIdx);
+            }
+        }
+
+        boolean isEmpty()
+        {
+            if(list.size()>0) return false;
+            return true;
+        }
+        void add(int value)
+        {
+            list.add(value);
+
+            int x = list.size()-1;
+            int y = (x-1)/2;
+
+            while(list.get(y)>list.get(x))
+            {
+                int temp = list.get(y);
+                list.set(y,list.get(x));
+                list.set(x,temp);
+                
+                x = y;
+                y = (x-1)/2;
+            }
+        }
+
+        int peek()
+        {
+            if(isEmpty()) return -1;
+            return list.get(0);
+        }
+
+        int remove()
+        {
+            if(isEmpty()) return -1;
+            int value = list.get(0);
+            
+            int li = list.size()-1;
+            list.set(0,list.get(li));
+            list.set(li,value);
+
+            list.remove(li);
+
+            heapify(0);
+            return value;
         }
     }
 
-    public static Node root;
-    public static void preOrder(Node head)
+    public static void heapify(int[] arr,int idx,int size)
     {
-        if(head==null) return;
-        System.out.print(head.data+" ");
-        preOrder(head.left);
-        preOrder(head.right);
-    }
-    public static int height(Node head)
-    {
-        if(head==null) return 0;
-        return head.height;
-    }
+        int maxIdx = idx;
+        int leftIdx = (2*idx)+1;
+        int rightIdx = (2*idx)+2;
 
-    public static int getBalanceFactor(Node head)
-    {
-        if(head==null) return 0;
-        return height(head.left) - height(head.right);
-    }
-    public static Node rightRotation(Node x)
-    {
-        Node y = x.left;
-        Node t2 = y.right;
+        if(leftIdx<size && arr[leftIdx]>arr[maxIdx])
+        {
+            maxIdx = leftIdx;
+        }
 
-        y.right = x;
-        x.left = t2;
+        if(rightIdx<size && arr[rightIdx]>arr[maxIdx])
+        {
+            maxIdx = rightIdx;
+        }
 
-        x.height = Math.max(height(x.left),height(x.right)) +1;
-        y.height = Math.max(height(y.left),height(y.right)) +1;
+        if(maxIdx!=idx)
+        {
+            int temp = arr[idx];
+            arr[idx] = arr[maxIdx];
+            arr[maxIdx] = temp;
 
-        return y;
+            heapify(arr,maxIdx,size);
+        }
     }
 
-    public static Node leftRotation(Node x)
-    {
-        Node y = x.right;
-        Node t2 = y.left;
-
-        y.left = x;
-        x.right = t2;
-
-        x.height = Math.max(height(x.left),height(x.right))+1;
-        y.height = Math.max(height(y.left),height(y.right))+1;
-
-        return y;
-    }
-    public static Node insertInAVL(Node head,int key)
-    {
-        if(head == null)
-        {
-            return new Node(key);
-        }
-
-        if(key<head.data)
-        {
-            head.left = insertInAVL(head.left,key);
-        }
-        else if(key>head.data)
-        {
-            head.right = insertInAVL(head.right,key);
-        }
-        else{
-            return head;
-        }
-
-        head.height = Math.max(height(head.left),height(head.right)) + 1;
-
-        int bf = getBalanceFactor(head);
-
-        if(bf>1 && key<head.left.data)
-        {
-            return rightRotation(head);
-        }
-        if(bf>1 && key>head.left.data)
-        {
-            head.left = leftRotation(head.left);
-            return rightRotation(head);
-        }
-        if(bf<-1 && key>head.right.data)
-        {
-            return leftRotation(head);
-        }
-        if(bf<-1 && key<head.right.data)
-        {
-            head.right = rightRotation(head.right);
-            return leftRotation(head);
-        }
-
-        return head;
-    }
     public static void main(String args[])
     {
-        int[] avltree = {10,20,30,40,50,25};
 
-        for(int i=0; i<avltree.length; i++)
-        {
-            root = insertInAVL(root,avltree[i]);
-        }
-
-        preOrder(root);
     }
 }
