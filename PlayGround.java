@@ -5,89 +5,118 @@ public class PlayGround
     public static class Node
     {
         int data;
+        int height;
         Node left;
         Node right;
 
         public Node(int data)
         {
             this.data = data;
+            this.height = 1;
             this.left = null;
             this.right = null;
         }
     }
 
     public static Node root;
-    public static int idx = -1;
-
-    public static Node buildBT(int[] tree)
+    public static void preOrder(Node head)
     {
-        idx++;
-        if(tree[idx]==-1) return null;
-        Node node = new Node(tree[idx]);
-        node.left = buildBT(tree);
-        node.right = buildBT(tree);
-        return node;
+        if(head==null) return;
+        System.out.print(head.data+" ");
+        preOrder(head.left);
+        preOrder(head.right);
+    }
+    public static int height(Node head)
+    {
+        if(head==null) return 0;
+        return head.height;
     }
 
-    public static class Info
+    public static int getBalanceFactor(Node head)
     {
-        boolean isbst;
-        int size;
-        int max;
-        int min;
-        public Info(boolean isbst,int size,int max,int min)
+        if(head==null) return 0;
+        return height(head.left) - height(head.right);
+    }
+    public static Node rightRotation(Node x)
+    {
+        Node y = x.left;
+        Node t2 = y.right;
+
+        y.right = x;
+        x.left = t2;
+
+        x.height = Math.max(height(x.left),height(x.right)) +1;
+        y.height = Math.max(height(y.left),height(y.right)) +1;
+
+        return y;
+    }
+
+    public static Node leftRotation(Node x)
+    {
+        Node y = x.right;
+        Node t2 = y.left;
+
+        y.left = x;
+        x.right = t2;
+
+        x.height = Math.max(height(x.left),height(x.right))+1;
+        y.height = Math.max(height(y.left),height(y.right))+1;
+
+        return y;
+    }
+    public static Node insertInAVL(Node head,int key)
+    {
+        if(head == null)
         {
-            this.isbst = isbst;
-            this.size = size;
-            this.max = max;
-            this.min = min;
-        }
-    }
-    public static void inOrder(Node root)
-    {
-        if(root==null) return;
-        inOrder(root.left);
-        System.out.print(root.data+" ");
-        inOrder(root.right);
-    }
-    public static void preOrder(Node root)
-    {
-        if(root==null) return;
-        System.out.print(root.data+" ");
-        preOrder(root.left);
-        preOrder(root.right);
-    }
-    public static int bstSize = 0;
-    public static Info largestBST(Node root)
-    {   
-        if(root == null ) return new Info(true,0,Integer.MIN_VALUE,Integer.MAX_VALUE);
-
-        Info leftinfo = largestBST(root.left);
-        Info rightinfo = largestBST(root.right);
-        int size = leftinfo.size + rightinfo.size +1;
-        int min = Math.min(root.data,Math.min(leftinfo.min,rightinfo.min));
-        int max = Math.max(root.data,Math.max(leftinfo.max,rightinfo.max));
-
-        if(root.data<leftinfo.max || root.data>rightinfo.min)
-        {
-            return new Info(false,size,max,min);
-        }
-        if(leftinfo.isbst && rightinfo.isbst)
-        {
-            bstSize = Math.max(bstSize,size);
-            return new Info(true,size,max,min);
+            return new Node(key);
         }
 
-        return new Info(false,size,max,min);
-        
+        if(key<head.data)
+        {
+            head.left = insertInAVL(head.left,key);
+        }
+        else if(key>head.data)
+        {
+            head.right = insertInAVL(head.right,key);
+        }
+        else{
+            return head;
+        }
+
+        head.height = Math.max(height(head.left),height(head.right)) + 1;
+
+        int bf = getBalanceFactor(head);
+
+        if(bf>1 && key<head.left.data)
+        {
+            return rightRotation(head);
+        }
+        if(bf>1 && key>head.left.data)
+        {
+            head.left = leftRotation(head.left);
+            return rightRotation(head);
+        }
+        if(bf<-1 && key>head.right.data)
+        {
+            return leftRotation(head);
+        }
+        if(bf<-1 && key<head.right.data)
+        {
+            head.right = rightRotation(head.right);
+            return leftRotation(head);
+        }
+
+        return head;
     }
     public static void main(String args[])
     {
-        int[] tree = {50,30,5,-1,-1,20,-1,-1,60,45,-1,-1,70,65,-1,-1,80,-1,-1};
+        int[] avltree = {10,20,30,40,50,25};
 
-        root = buildBT(tree);
-        largestBST(root);
-        System.out.println(bstSize);
+        for(int i=0; i<avltree.length; i++)
+        {
+            root = insertInAVL(root,avltree[i]);
+        }
+
         preOrder(root);
     }
 }
