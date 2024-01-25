@@ -2,46 +2,48 @@ import java.util.*;
 
 public class PlayGround
 {  
-    public static class Soldier implements Comparable<Soldier>
+    public static class Pair implements Comparable<Pair>
     {
-        int count;
+        int val;
         int idx;
-        public Soldier(int count,int idx)
+        public Pair(int val,int idx)
         {
-            this.count = count;
+            this.val = val;
             this.idx = idx;
         }
 
         @Override
-        public int compareTo(Soldier o2)
+        public int compareTo(Pair o2)
         {
-            if(this.count==o2.count)
-            {
-                return this.idx - o2.idx;
-            }
-            return this.count - o2.count;
+            return o2.val - this.val;
         }
     }
     public static void main(String args[])
     {
-        int[][] soldiers = {{1,0,0,0},{1,1,1,1},{1,0,0,0},{1,0,0,0}};
-        int k = 2;
-        PriorityQueue<Soldier> pq = new PriorityQueue<>();
-
-        for(int i=0; i<soldiers.length; i++)
-        {
-            int count =0;
-            for(int j=0; j<soldiers[0].length; j++)
-            {
-                count += (soldiers[i][j]==1)?1 :0;
-            }
-            pq.add(new Soldier(count,i));
-        }
+        int[] arr = {1,3,-1,-3,5,3,6,7};
+        int k = 3;
+        int[] result = new int[arr.length-k+1];
+        PriorityQueue<Pair> pq = new PriorityQueue<>();
 
         for(int i=0; i<k; i++)
         {
-            System.out.println("R"+pq.remove().idx);
+            pq.add(new Pair(arr[i],i));
         }
-     
+        result[0] = pq.peek().val;
+
+        for(int i=k; i<arr.length; i++)
+        {
+            while(pq.size()>0 && pq.peek().idx<=(i-k))
+            {
+                pq.remove();
+            }
+            pq.add(new Pair(arr[i],i));
+            result[i-k+1] = pq.peek().val;
+        }
+
+        for(int value : result)
+        {
+            System.out.print(value+" ");
+        }
     }
 }
