@@ -2,34 +2,35 @@ import java.util.*;
 
 public class PlayGround
 {  
+    public static boolean isAnagram(String s,String t)
+    {
+        HashMap<Character,Integer> map = new HashMap<>();
+
+        for(int i=0; i<s.length(); i++)
+        {
+            char ch = s.charAt(i);
+            map.put(ch,map.getOrDefault(ch,0)+1);
+        }
+
+        for(int i=0; i<t.length(); i++)
+        {
+            char ch = t.charAt(i);
+            if(map.get(ch)!=null)
+            {
+                if(map.get(ch)==1) map.remove(ch);
+                else map.put(ch,map.get(ch)-1);
+            }
+            else{
+                return false;
+            }
+        }
+        return map.isEmpty();
+    }
     public static void main(String args[])
     {
-        int[] nums = {1,3,2,5,1,3,1,5,1};
-        int n = 9;
-
-        HashMap<Integer,Integer> map = new HashMap<>();
-
-        for(int i=0; i<nums.length; i++)
-        {
-            int num = nums[i];
-            if(map.containsKey(num))
-            {
-                map.put(num,map.get(num)+1);
-            }
-            else
-            {
-                map.put(num,1);
-            }
-        }
-
-        Set<Integer> keys = map.keySet();
-
-        for(Integer key : keys)
-        {
-            if(map.get(key)>n/3)
-            {
-                System.out.println(key);
-            }
-        }
+        String s = "race";
+        String t = "care";
+        
+        System.out.println(isAnagram(s,t));
     }
 }
