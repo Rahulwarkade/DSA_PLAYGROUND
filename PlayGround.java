@@ -2,38 +2,27 @@ import java.util.*;
 
 public class PlayGround
 {  
-    public static String getStart(HashMap<String,String> from)
-    {
-        HashSet<String> to = new HashSet<>();
-
-        Iterator it = from.keySet().iterator();
-
-        while(it.hasNext())
-        {
-            to.add(from.get(it.next().toString()));
-        }
-
-        for(String key : from.keySet())
-        {
-            if(!to.contains(key)) return key;
-        }
-        return "start";
-    }
     public static void main(String args[])
     {
-        HashMap<String,String> tickets = new HashMap<>();
-        tickets.put("Chennai","Bengaluru");   
-        tickets.put("Mumbai","Delhi");   
-        tickets.put("Goa","Chennai");   
-        tickets.put("Delhi","Goa");   
+        int[] arr = {15,-2,2,-8,1,7,10};
+        int sum = 0;
+        int len = 0;
+        HashMap<Integer,Integer> map = new HashMap<>();
 
-        String start = getStart(tickets);
-        System.out.print(start);
-
-        for(String key : tickets.keySet())
+        for(int i=0; i<arr.length; i++)
         {
-            System.out.print("->"+tickets.get(start));
-            start = tickets.get(start);
+            sum += arr[i];
+
+            if(map.containsKey(sum))
+            {
+                len = Math.max(len,i-map.get(sum));
+            }
+            else
+            {
+                map.put(sum, i);
+            }
         }
+
+        System.out.println("Largest Subarray with 0 sum = "+ len);
     }
 }
