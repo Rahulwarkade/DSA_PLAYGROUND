@@ -2,31 +2,38 @@ import java.util.*;
 
 public class PlayGround
 {  
-    public static void main(String args[])
+    public static String getStart(HashMap<String,String> from)
     {
-        int[] arr1 = {7,3,9};
-        int[] arr2 = {6,3,9,2,9,4};
-        HashSet<Integer> set = new HashSet<>();
-        HashSet<Integer> set2 = new HashSet<>();
-        for(int value : arr1) set.add(value);
-        for(int value : arr2) set.add(value);
+        HashSet<String> to = new HashSet<>();
 
-        System.out.println("Union is = "+ set.size());
+        Iterator it = from.keySet().iterator();
 
-        set = new HashSet<>();
-        for(int value : arr1) set.add(value);
-
-        int count = 0;
-        for(int value : arr2)
+        while(it.hasNext())
         {
-            if(set.contains(value))
-            {
-                count++;
-                set.remove(value);
-            }
+            to.add(from.get(it.next().toString()));
         }
 
-        System.out.println("Intersection = "+count);
-        
+        for(String key : from.keySet())
+        {
+            if(!to.contains(key)) return key;
+        }
+        return "start";
+    }
+    public static void main(String args[])
+    {
+        HashMap<String,String> tickets = new HashMap<>();
+        tickets.put("Chennai","Bengaluru");   
+        tickets.put("Mumbai","Delhi");   
+        tickets.put("Goa","Chennai");   
+        tickets.put("Delhi","Goa");   
+
+        String start = getStart(tickets);
+        System.out.print(start);
+
+        for(String key : tickets.keySet())
+        {
+            System.out.print("->"+tickets.get(start));
+            start = tickets.get(start);
+        }
     }
 }
