@@ -47,29 +47,34 @@ public class PlayGround
 
         return temp.eow;
     }
-
-    public static int uniqueSubstr(Node temp)
+    public static String longword = "";
+    public static void longestWord(Node temp, StringBuilder ans)
     {
-        if(temp==null) return 0;
+        if(temp==null) return;
 
-        int nodes = 0;
-        for(int i=0; i<temp.children.length; i++)
+        for(int i=0; i<26; i++)
         {
-            if(temp.children[i]!=null)
+            if(temp.children[i]!=null && temp.children[i].eow==true)
             {
-                nodes += uniqueSubstr(temp.children[i]);
+                char ch = (char)(i+'a');
+                ans.append(ch);
+                if(ans.length()>longword.length())
+                {
+                    longword = ans.toString();
+                }
+                longestWord(temp.children[i],ans);
+                ans.deleteCharAt(ans.length()-1);
             }
         }
-        return nodes+1;
     }
     public static void main(String args[])
     {
-        String str = "ababa";
-        for(int i=0; i<str.length(); i++)
+        String[] words = {"a","banana","app","appl","ap","apply","apple"};
+        for(int i=0; i<words.length; i++)
         {
-            insert(str.substring(i));
+            insert(words[i]);
         }
-
-        System.out.println("Unique Substrings = "+uniqueSubstr(root));
+        longestWord(root,new StringBuilder(""));
+        System.out.println("Longest word = "+longword);
     }
 }
