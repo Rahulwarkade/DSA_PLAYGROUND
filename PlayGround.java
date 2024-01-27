@@ -48,28 +48,28 @@ public class PlayGround
         return temp.eow;
     }
 
-    public static boolean startsWith(String prefix)
+    public static int uniqueSubstr(Node temp)
     {
-        Node temp = root;
+        if(temp==null) return 0;
 
-        for(int i=0; i<prefix.length(); i++)
+        int nodes = 0;
+        for(int i=0; i<temp.children.length; i++)
         {
-            int idx = prefix.charAt(i) - 'a';
-            if(temp.children[idx]==null)
-                return false;
-            temp = temp.children[idx];
+            if(temp.children[i]!=null)
+            {
+                nodes += uniqueSubstr(temp.children[i]);
+            }
         }
-        return true;
+        return nodes+1;
     }
     public static void main(String args[])
     {
-        String[] words = {"apple","app","mango","man","woman"};
-
-        for(int i=0; i<words.length; i++)
+        String str = "ababa";
+        for(int i=0; i<str.length(); i++)
         {
-            insert(words[i]);
+            insert(str.substring(i));
         }
 
-        System.out.println("Starts with = "+startsWith("moon"));
+        System.out.println("Unique Substrings = "+uniqueSubstr(root));
     }
 }
