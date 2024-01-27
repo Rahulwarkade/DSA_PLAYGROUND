@@ -32,7 +32,22 @@ public class PlayGround
         temp.eow = true;
     }
 
+    public static boolean search(String word)
+    {
+        Node temp = root;
 
+        for(int i=0; i<word.length(); i++)
+        {
+            int idx = word.charAt(i) - 'a';
+            if(temp.children[idx]==null)
+            {
+                return false;
+            }
+            temp = temp.children[idx];
+        }
+
+        return temp.eow;
+    }
     public static void main(String args[])
     {
         String[] words = {"the","a","there","their","any","thee"};
@@ -42,5 +57,6 @@ public class PlayGround
             insert(words[i]);
         }
 
+        System.out.println(search("the"));
     }
 }
