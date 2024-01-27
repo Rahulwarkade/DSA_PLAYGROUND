@@ -6,7 +6,6 @@ public class PlayGround
     {
         Node[] children = new Node[26];
         boolean eow  = false;
-        int freq = 1;
         public Node()
         {
             for(int i=0; i<26; i++)
@@ -26,9 +25,6 @@ public class PlayGround
             if(temp.children[idx]==null)
             {
                 temp.children[idx] = new Node();
-            }
-            else{
-                temp.children[idx].freq++;
             }
             temp = temp.children[idx];
         }
@@ -52,37 +48,28 @@ public class PlayGround
         return temp.eow;
     }
 
-
-    public static void shortestPrefix(Node temp, String ans)
+    public static boolean startsWith(String prefix)
     {
-        if(temp == null)
-        {
-            return;
-        }
+        Node temp = root;
 
-        if(temp.freq==1)
+        for(int i=0; i<prefix.length(); i++)
         {
-            System.out.println(ans);
-            return;
+            int idx = prefix.charAt(i) - 'a';
+            if(temp.children[idx]==null)
+                return false;
+            temp = temp.children[idx];
         }
-        for(int i=0; i<26; i++)
-        {
-            if(temp.children[i]!=null)
-            {
-                shortestPrefix(temp.children[i],ans + (char)(i+'a'));
-            }
-        
-        }
+        return true;
     }
     public static void main(String args[])
     {
-        String[] words = {"zebra","dog","duck","dove"};
+        String[] words = {"apple","app","mango","man","woman"};
 
         for(int i=0; i<words.length; i++)
         {
             insert(words[i]);
         }
-        root.freq = -1;
-        shortestPrefix(root,"");
+
+        System.out.println("Starts with = "+startsWith("moon"));
     }
 }
