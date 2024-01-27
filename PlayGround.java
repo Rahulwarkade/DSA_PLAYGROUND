@@ -6,7 +6,7 @@ public class PlayGround
     {
         Node[] children = new Node[26];
         boolean eow  = false;
-
+        int freq = 1;
         public Node()
         {
             for(int i=0; i<26; i++)
@@ -26,6 +26,9 @@ public class PlayGround
             if(temp.children[idx]==null)
             {
                 temp.children[idx] = new Node();
+            }
+            else{
+                temp.children[idx].freq++;
             }
             temp = temp.children[idx];
         }
@@ -49,28 +52,37 @@ public class PlayGround
         return temp.eow;
     }
 
-    public static boolean wordBreak(String key)
-    {
-        if(key.length() == 0) return true;
 
-        for(int i=1; i<=key.length(); i++)
+    public static void shortestPrefix(Node temp, String ans)
+    {
+        if(temp == null)
         {
-            if(search(key.substring(0,i)) && wordBreak(key.substring(i)))
-            {
-                return true;
-            }
+            return;
         }
-        return false;
+
+        if(temp.freq==1)
+        {
+            System.out.println(ans);
+            return;
+        }
+        for(int i=0; i<26; i++)
+        {
+            if(temp.children[i]!=null)
+            {
+                shortestPrefix(temp.children[i],ans + (char)(i+'a'));
+            }
+        
+        }
     }
     public static void main(String args[])
     {
-        String[] words = {"i","like","sam","samsung","mobile","ice"};
-        String key = "ilikesamsung";
+        String[] words = {"zebra","dog","duck","dove"};
+
         for(int i=0; i<words.length; i++)
         {
             insert(words[i]);
         }
-
-        System.out.println(wordBreak(key));
+        root.freq = -1;
+        shortestPrefix(root,"");
     }
 }
