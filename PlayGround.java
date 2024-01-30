@@ -72,16 +72,52 @@ public class PlayGround
         }
         return true;
     }
+
+    public static boolean isCycleUtil(ArrayList<Edge>[] graph,boolean[] vis,boolean[] st,int src)
+    {
+        vis[src] = true;
+        st[src] = true;
+        for(Edge child : graph[src])
+        {
+            if(st[child.dt]) return true;
+            if(!vis[child.dt])
+            {
+                return isCycleUtil(graph,vis,st,child.dt);
+            }
+        }
+
+        st[src] = false;
+        return false;
+    }
+    public static boolean isCycle(ArrayList<Edge>[] graph)
+    {
+        int N = graph.length;
+        boolean[] visited = new boolean[N];
+        boolean[] stack = new boolean[N];
+        Arrays.fill(visited,false);
+        Arrays.fill(stack,false);
+
+        for(int i=0; i<N; i++)
+        {
+            if(!visited[i])
+            {
+                if(isCycleUtil(graph,visited,stack,i))
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
     public static void main(String args[])
     {
         int N  = 5;
         // int[][] edges = {{0,1},{1,2},{1,3},{2,3},{2,4}};
-        int[][] edges = {{0,1},{0,2},{1,3},{2,4},{3,4}};
+        int[][] edges = {{0,2},{1,0},{2,3},{3,0}};
         int M = edges.length;
 
         ArrayList<Edge>[] Edges = new ArrayList[N];
-        boolean[] visited = new boolean[N];
-        Arrays.fill(visited,false);
+
         for(int i=0; i<N; i++)
         {
             Edges[i] = new ArrayList<>();
@@ -91,9 +127,9 @@ public class PlayGround
             int x = edges[i][0];
             int y = edges[i][1];
             Edges[x].add(new Edge(x,y,1));
-            Edges[y].add(new Edge(y,x,1));
+            // Edges[y].add(new Edge(y,x,1));
         }
 
-        System.out.println(bipartite(Edges));
+        System.out.println(isCycle(Edges));
     }
 }
