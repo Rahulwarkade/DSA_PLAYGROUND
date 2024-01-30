@@ -15,36 +15,44 @@ public class PlayGround
         }
     }
 
-    public static void topSortUtil(ArrayList<Edge>[] graph,boolean[] vis,Stack<Integer> st,int src)
-    {
-        vis[src] = true;
-
-        for(Edge child : graph[src])
-        {
-            if(!vis[child.dt])
-            {
-                topSortUtil(graph,vis,st,child.dt);
-            }
-        }
-        st.push(src);
-    }
-    public static void topSort(ArrayList<Edge>[] graph)
+    public static void calcIndeg(ArrayList<Edge>[] graph,int[] indeg)
     {
         int N = graph.length;
-        boolean[] visited = new boolean[N];
-        Stack<Integer> st = new Stack<>();
+        for(int i=0; i<N; i++)
+        {
+            for(Edge child : graph[i])
+            {
+                indeg[child.dt]++;
+            }
+        }
+    }
+    public static void topSortKahnsAlgo(ArrayList<Edge>[] graph)
+    {
+        int N = graph.length;
+        int[] indeg = new int[N];
+        calcIndeg(graph,indeg);
+        Queue<Integer> q = new LinkedList<>();
 
         for(int i=0; i<N; i++)
         {
-            if(!visited[i])
+            if(indeg[i]==0)
             {
-                topSortUtil(graph,visited,st,i);
+                q.add(i);
             }
         }
 
-        while(!st.isEmpty())
+        while(!q.isEmpty())
         {
-            System.out.print(st.pop()+" ");
+            int node = q.remove();
+            System.out.print(node+" ");
+            for(Edge child : graph[node])
+            {
+                indeg[child.dt]--;
+                if(indeg[child.dt]==0)
+                {
+                    q.add(child.dt);
+                }
+            }
         }
     }
     public static void main(String args[])
@@ -67,6 +75,6 @@ public class PlayGround
             // Edges[y].add(new Edge(y,x,1));
         }
 
-        topSort(Edges);
+        topSortKahnsAlgo(Edges);
     }
 }
