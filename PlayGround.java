@@ -15,105 +15,42 @@ public class PlayGround
         }
     }
 
-
-    public static void dfs(ArrayList<Edge>[] graph,boolean[] vis,int src)
+    public static void topSortUtil(ArrayList<Edge>[] graph,boolean[] vis,Stack<Integer> st,int src)
     {
         vis[src] = true;
 
         for(Edge child : graph[src])
-        {    
+        {
             if(!vis[child.dt])
             {
-                dfs(graph,vis,child.dt);
+                topSortUtil(graph,vis,st,child.dt);
             }
         }
+        st.push(src);
     }
-
-    public static boolean bipartiteUtil(ArrayList<Edge>[] graph,int[] col,int src)
-    {
-        Queue<Integer> q = new LinkedList<>();
-        col[src] = 0;
-        q.add(src);
-
-        while(!q.isEmpty())
-        {
-            int node = q.remove();
-
-            for(Edge child : graph[node])
-            {
-                if(col[child.dt]==-1)
-                {
-                    int newCol = col[node]==0?1 : 0;
-                    col[child.dt] = newCol;
-                    q.add(child.dt);
-                }
-                else if(col[child.dt]==col[node])
-                {
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    }
-    public static boolean bipartite(ArrayList<Edge>[] graph)
-    {
-        int col[] = new int[graph.length];
-        Arrays.fill(col,-1);
-        for(int i=0; i<graph.length; i++)
-        {
-            if(col[i]==-1)
-            {
-                if(!bipartiteUtil(graph,col,i))
-                {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
-    public static boolean isCycleUtil(ArrayList<Edge>[] graph,boolean[] vis,boolean[] st,int src)
-    {
-        vis[src] = true;
-        st[src] = true;
-        for(Edge child : graph[src])
-        {
-            if(st[child.dt]) return true;
-            if(!vis[child.dt])
-            {
-                return isCycleUtil(graph,vis,st,child.dt);
-            }
-        }
-
-        st[src] = false;
-        return false;
-    }
-    public static boolean isCycle(ArrayList<Edge>[] graph)
+    public static void topSort(ArrayList<Edge>[] graph)
     {
         int N = graph.length;
         boolean[] visited = new boolean[N];
-        boolean[] stack = new boolean[N];
-        Arrays.fill(visited,false);
-        Arrays.fill(stack,false);
+        Stack<Integer> st = new Stack<>();
 
         for(int i=0; i<N; i++)
         {
             if(!visited[i])
             {
-                if(isCycleUtil(graph,visited,stack,i))
-                {
-                    return true;
-                }
+                topSortUtil(graph,visited,st,i);
             }
         }
-        return false;
+
+        while(!st.isEmpty())
+        {
+            System.out.print(st.pop()+" ");
+        }
     }
     public static void main(String args[])
     {
-        int N  = 5;
-        // int[][] edges = {{0,1},{1,2},{1,3},{2,3},{2,4}};
-        int[][] edges = {{0,2},{1,0},{2,3},{3,0}};
+        int N  = 6;
+        int[][] edges = {{2,3},{3,1},{4,1},{4,0},{5,0},{5,2}};
         int M = edges.length;
 
         ArrayList<Edge>[] Edges = new ArrayList[N];
@@ -130,6 +67,6 @@ public class PlayGround
             // Edges[y].add(new Edge(y,x,1));
         }
 
-        System.out.println(isCycle(Edges));
+        topSort(Edges);
     }
 }
