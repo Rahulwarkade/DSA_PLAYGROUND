@@ -2,79 +2,41 @@ import java.util.*;
 
 public class PlayGround
 {  
-    public static class Node 
+    public static class Edge
     {
-        Node[] children = new Node[26];
-        boolean eow  = false;
-        public Node()
+        int sr;
+        int dt;
+        int wt;
+        Edge(int sr,int dt,int wt)
         {
-            for(int i=0; i<26; i++)
-                this.children[i] = null;
+            this.sr = sr;
+            this.dt = dt;
+            this.wt = wt;
         }
     }
 
-    public static Node root = new Node();
-
-    public static void insert(String word)
-    {
-        Node temp = root;
-        for(int i=0; i<word.length(); i++)
-        {
-            char ch = word.charAt(i);
-            int idx = ch - 'a';
-            if(temp.children[idx]==null)
-            {
-                temp.children[idx] = new Node();
-            }
-            temp = temp.children[idx];
-        }
-        temp.eow = true;
-    }
-
-    public static boolean search(String word)
-    {
-        Node temp = root;
-
-        for(int i=0; i<word.length(); i++)
-        {
-            int idx = word.charAt(i) - 'a';
-            if(temp.children[idx]==null)
-            {
-                return false;
-            }
-            temp = temp.children[idx];
-        }
-
-        return temp.eow;
-    }
-    public static String longword = "";
-    public static void longestWord(Node temp, StringBuilder ans)
-    {
-        if(temp==null) return;
-
-        for(int i=0; i<26; i++)
-        {
-            if(temp.children[i]!=null && temp.children[i].eow==true)
-            {
-                char ch = (char)(i+'a');
-                ans.append(ch);
-                if(ans.length()>longword.length())
-                {
-                    longword = ans.toString();
-                }
-                longestWord(temp.children[i],ans);
-                ans.deleteCharAt(ans.length()-1);
-            }
-        }
-    }
     public static void main(String args[])
     {
-        String[] words = {"a","banana","app","appl","ap","apply","apple"};
-        for(int i=0; i<words.length; i++)
+        int N  = 7;
+        // int[][] edges = {{0,1},{1,2},{1,3},{2,3},{2,4}};
+        int[][] edges = {{0,1},{0,2},{1,3},{2,4},{3,4},{3,5},{4,5},{5,6}};
+        int M = edges.length;
+
+        ArrayList<Edge>[] Edges = new ArrayList[N];
+        for(int i=0; i<N; i++)
         {
-            insert(words[i]);
+            Edges[i] = new ArrayList<>();
         }
-        longestWord(root,new StringBuilder(""));
-        System.out.println("Longest word = "+longword);
+        for(int i=0; i<M; i++)
+        {
+            int x = edges[i][0];
+            int y = edges[i][1];
+            Edges[x].add(new Edge(x,y,1));
+            Edges[y].add(new Edge(y,x,1));
+        }
+
+        for(Edge value : Edges[4])
+            System.out.println(value.dt);
+        
     }
 }
