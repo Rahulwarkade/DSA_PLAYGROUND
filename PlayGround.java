@@ -28,11 +28,39 @@ public class PlayGround
             }
         }
     }
+
+    public static boolean detectCycleUtil(ArrayList<Edge>[] graph,boolean[] vis,int src,int par)
+    {
+        vis[src] = true;
+        System.out.print(src+" ");
+        for(Edge child : graph[src])
+        {
+            if(vis[child.dt] && child.dt!=par)
+                return true;
+            if(!vis[child.dt] && detectCycleUtil(graph,vis,child.dt,src))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+    public static boolean detectCycle(ArrayList<Edge>[] graph,boolean[] vis)
+    {
+        
+        for(int i=0; i<graph.length; i++)
+        {
+            if(!vis[i] && detectCycleUtil(graph,vis,i,-1))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
     public static void main(String args[])
     {
-        int N  = 9;
+        int N  = 5;
         // int[][] edges = {{0,1},{1,2},{1,3},{2,3},{2,4}};
-        int[][] edges = {{0,1},{0,2},{1,3},{2,4},{3,4},{3,5},{4,5},{5,6},{7,8}};
+        int[][] edges = {{0,1},{0,2},{1,3},{2,4}};
         int M = edges.length;
 
         ArrayList<Edge>[] Edges = new ArrayList[N];
@@ -49,17 +77,7 @@ public class PlayGround
             Edges[x].add(new Edge(x,y,1));
             Edges[y].add(new Edge(y,x,1));
         }
-        
-        int cc = 0;
-        for(int i=0; i<N; i++)
-        {
-            if(!visited[i])
-            {
-                dfs(Edges,visited,i);
-                cc++;
-            }
-        }
 
-        System.out.println("Connected Components = "+cc);
+        System.out.println(detectCycle(Edges,visited));
     }
 }
