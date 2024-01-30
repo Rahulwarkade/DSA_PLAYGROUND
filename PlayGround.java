@@ -15,6 +15,28 @@ public class PlayGround
         }
     }
 
+    public static void levelOrder(ArrayList<Edge>[] graph,int root)
+    {
+        Queue<Integer> q = new LinkedList<>();
+        boolean[] visited = new boolean[graph.length];
+        Arrays.fill(visited,false);
+    
+        q.add(root);
+        visited[root] = true;
+        while(!q.isEmpty())
+        {
+            int node = q.remove();
+            System.out.print(node+" ");
+            for(Edge edges : graph[node])
+            {
+                if(!visited[edges.dt])
+                {
+                    q.add(edges.dt);
+                    visited[edges.dt] = true;
+                }
+            }
+        }
+    }
     public static void main(String args[])
     {
         int N  = 7;
@@ -34,9 +56,7 @@ public class PlayGround
             Edges[x].add(new Edge(x,y,1));
             Edges[y].add(new Edge(y,x,1));
         }
-
-        for(Edge value : Edges[4])
-            System.out.println(value.dt);
         
+        levelOrder(Edges,0);
     }
 }
