@@ -16,18 +16,20 @@ public class PlayGround
     }
 
 
-    public static void DFS(ArrayList<Edge>[] graph,int root,boolean[] vis)
+    public static boolean hasPath(ArrayList<Edge>[] graph,boolean[] vis,int src,int dest)
     {
-        vis[root] = true;
-        System.out.print(root+" ");
+        if(src==dest) return true;
+        vis[src] = true;
+        System.out.print(src+" ");
 
-        for(Edge child : graph[root])
+        for(Edge child : graph[src])
         {    
-            if(!vis[child.dt])
+            if(!vis[child.dt] && hasPath(graph,vis,child.dt,dest))
             {
-                DFS(graph,child.dt,vis);
+                return true;
             }
         }
+        return false;
     }
     public static void main(String args[])
     {
@@ -51,6 +53,6 @@ public class PlayGround
             Edges[y].add(new Edge(y,x,1));
         }
         
-        DFS(Edges,0,visited);
+       System.out.println("Has a path = "+hasPath(Edges,visited,0,5));
     }
 }
