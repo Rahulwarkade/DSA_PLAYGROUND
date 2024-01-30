@@ -29,38 +29,54 @@ public class PlayGround
         }
     }
 
-    public static boolean detectCycleUtil(ArrayList<Edge>[] graph,boolean[] vis,int src,int par)
+    public static boolean bipartiteUtil(ArrayList<Edge>[] graph,int[] col,int src)
     {
-        vis[src] = true;
-        System.out.print(src+" ");
-        for(Edge child : graph[src])
+        Queue<Integer> q = new LinkedList<>();
+        col[src] = 0;
+        q.add(src);
+
+        while(!q.isEmpty())
         {
-            if(vis[child.dt] && child.dt!=par)
-                return true;
-            if(!vis[child.dt] && detectCycleUtil(graph,vis,child.dt,src))
+            int node = q.remove();
+
+            for(Edge child : graph[node])
             {
-                return true;
+                if(col[child.dt]==-1)
+                {
+                    int newCol = col[node]==0?1 : 0;
+                    col[child.dt] = newCol;
+                    q.add(child.dt);
+                }
+                else if(col[child.dt]==col[node])
+                {
+                    return false;
+                }
             }
         }
-        return false;
+
+        return true;
     }
-    public static boolean detectCycle(ArrayList<Edge>[] graph,boolean[] vis)
+    public static boolean bipartite(ArrayList<Edge>[] graph)
     {
-        
+        int col[] = new int[graph.length];
+        Arrays.fill(col,-1);
         for(int i=0; i<graph.length; i++)
         {
-            if(!vis[i] && detectCycleUtil(graph,vis,i,-1))
+            if(col[i]==-1)
             {
-                return true;
+                if(!bipartiteUtil(graph,col,i))
+                {
+                    return false;
+                }
             }
         }
-        return false;
+        return true;
     }
     public static void main(String args[])
     {
         int N  = 5;
         // int[][] edges = {{0,1},{1,2},{1,3},{2,3},{2,4}};
-        int[][] edges = {{0,1},{0,2},{1,3},{2,4}};
+        int[][] edges = {{0,1},{0,2},{1,3},{2,4},{3,4}};
         int M = edges.length;
 
         ArrayList<Edge>[] Edges = new ArrayList[N];
@@ -78,6 +94,6 @@ public class PlayGround
             Edges[y].add(new Edge(y,x,1));
         }
 
-        System.out.println(detectCycle(Edges,visited));
+        System.out.println(bipartite(Edges));
     }
 }
