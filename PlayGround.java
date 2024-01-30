@@ -15,34 +15,57 @@ public class PlayGround
         }
     }
 
-    public static void calcIndeg(ArrayList<Edge>[] graph,int[] indeg)
+    public static class Pair implements Comparable<Pair>
     {
-        int N = graph.length;
-        for(int i=0; i<N; i++)
+        int v;
+        int wt;
+
+        Pair(int v,int wt)
         {
-            for(Edge child : graph[i])
-            {
-                indeg[child.dt]++;
-            }
+            this.v = v;
+            this.wt = wt;
+        }
+        @Override
+        public int compareTo(Pair ob2)
+        {
+            return this.wt - ob2.wt;
         }
     }
-
-    public static void allPath(ArrayList<Edge>[] graph,int src,int dest,String str)
+    public static void dijkstrasAlgo(ArrayList<Edge>[] graph,int source)
     {
-        if(src==dest)
+        int N = graph.length;
+        int[] distance = new int[N];
+        boolean[] visited = new boolean[N];
+        Arrays.fill(distance,Integer.MAX_VALUE);
+        Arrays.fill(visited,false);
+        PriorityQueue<Pair> pq =new PriorityQueue<>();
+        pq.add(new Pair(source,0));
+        distance[source] = 0;
+
+        while(!pq.isEmpty())
         {
-            System.out.println(str+dest);
-            return;
+            Pair node = pq.remove();
+            if(visited[node.v]) continue;
+            visited[node.v] = true;
+            for(Edge child : graph[node.v])
+            {
+                if(distance[node.v]+child.wt<distance[child.dt])
+                {
+                    distance[child.dt] = distance[node.v]+child.wt;
+                    pq.add(new Pair(child.dt,distance[child.dt]));
+                }
+            }
         }
-        for(Edge child : graph[src])
+
+        for(int i=0; i<distance.length; i++)
         {
-            allPath(graph,child.dt,dest,str+src+" ");
+            System.out.println(i+" distance = "+distance[i]);
         }
     }
     public static void main(String args[])
     {
         int N  = 6;
-        int[][] edges = {{0,3},{2,3},{3,1},{4,1},{4,0},{5,0},{5,2}};
+        int[][] edges = {{0,1,2},{0,2,4},{1,2,1},{1,3,7},{2,4,3},{3,5,1},{4,3,2},{4,5,5}};
         int M = edges.length;
 
         ArrayList<Edge>[] Edges = new ArrayList[N];
@@ -55,10 +78,11 @@ public class PlayGround
         {
             int x = edges[i][0];
             int y = edges[i][1];
-            Edges[x].add(new Edge(x,y,1));
+            int wt = edges[i][2];
+            Edges[x].add(new Edge(x,y,wt));
             // Edges[y].add(new Edge(y,x,1));
         }
 
-        allPath(Edges,5,1,"");
+        dijkstrasAlgo(Edges,0);
     }
 }
