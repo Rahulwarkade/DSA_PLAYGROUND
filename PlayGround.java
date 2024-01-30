@@ -16,26 +16,23 @@ public class PlayGround
     }
 
 
-    public static boolean hasPath(ArrayList<Edge>[] graph,boolean[] vis,int src,int dest)
+    public static void dfs(ArrayList<Edge>[] graph,boolean[] vis,int src)
     {
-        if(src==dest) return true;
         vis[src] = true;
-        System.out.print(src+" ");
 
         for(Edge child : graph[src])
         {    
-            if(!vis[child.dt] && hasPath(graph,vis,child.dt,dest))
+            if(!vis[child.dt])
             {
-                return true;
+                dfs(graph,vis,child.dt);
             }
         }
-        return false;
     }
     public static void main(String args[])
     {
-        int N  = 7;
+        int N  = 9;
         // int[][] edges = {{0,1},{1,2},{1,3},{2,3},{2,4}};
-        int[][] edges = {{0,1},{0,2},{1,3},{2,4},{3,4},{3,5},{4,5},{5,6}};
+        int[][] edges = {{0,1},{0,2},{1,3},{2,4},{3,4},{3,5},{4,5},{5,6},{7,8}};
         int M = edges.length;
 
         ArrayList<Edge>[] Edges = new ArrayList[N];
@@ -53,6 +50,16 @@ public class PlayGround
             Edges[y].add(new Edge(y,x,1));
         }
         
-       System.out.println("Has a path = "+hasPath(Edges,visited,0,5));
+        int cc = 0;
+        for(int i=0; i<N; i++)
+        {
+            if(!visited[i])
+            {
+                dfs(Edges,visited,i);
+                cc++;
+            }
+        }
+
+        System.out.println("Connected Components = "+cc);
     }
 }
