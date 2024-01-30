@@ -26,39 +26,23 @@ public class PlayGround
             }
         }
     }
-    public static void topSortKahnsAlgo(ArrayList<Edge>[] graph)
+
+    public static void allPath(ArrayList<Edge>[] graph,int src,int dest,String str)
     {
-        int N = graph.length;
-        int[] indeg = new int[N];
-        calcIndeg(graph,indeg);
-        Queue<Integer> q = new LinkedList<>();
-
-        for(int i=0; i<N; i++)
+        if(src==dest)
         {
-            if(indeg[i]==0)
-            {
-                q.add(i);
-            }
+            System.out.println(str+dest);
+            return;
         }
-
-        while(!q.isEmpty())
+        for(Edge child : graph[src])
         {
-            int node = q.remove();
-            System.out.print(node+" ");
-            for(Edge child : graph[node])
-            {
-                indeg[child.dt]--;
-                if(indeg[child.dt]==0)
-                {
-                    q.add(child.dt);
-                }
-            }
+            allPath(graph,child.dt,dest,str+src+" ");
         }
     }
     public static void main(String args[])
     {
         int N  = 6;
-        int[][] edges = {{2,3},{3,1},{4,1},{4,0},{5,0},{5,2}};
+        int[][] edges = {{0,3},{2,3},{3,1},{4,1},{4,0},{5,0},{5,2}};
         int M = edges.length;
 
         ArrayList<Edge>[] Edges = new ArrayList[N];
@@ -75,6 +59,6 @@ public class PlayGround
             // Edges[y].add(new Edge(y,x,1));
         }
 
-        topSortKahnsAlgo(Edges);
+        allPath(Edges,5,1,"");
     }
 }
