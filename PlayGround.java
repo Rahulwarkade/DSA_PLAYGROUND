@@ -15,77 +15,59 @@ public class PlayGround
         }
     }
 
-    public static class Info implements Comparable<Info>
+    public static class Pair implements Comparable<Pair>
     {
         int v;
         int wt;
-        int k;
-        Info(int v,int wt,int k)
+        Pair(int v,int wt)
         {
             this.v = v;
             this.wt = wt;
-            this.k = k;
         }
+
         @Override
-        public int compareTo(Info ob2)
+        public int compareTo(Pair obj)
         {
-            return this.k - ob2.k;
+            return this.wt-obj.wt;
         }
     }
 
-    public static void cheapestFlights(ArrayList<Edge>[] graph,int source,int destination,int stops)
+    public static void connectingCities(int[][] cities,int source)
     {
-        int[] distance = new int[graph.length];
-        Arrays.fill(distance,Integer.MAX_VALUE);
-        PriorityQueue<Info> pq = new PriorityQueue<>();
-        pq.add(new Info(source,0,0));
-        distance[source] = 0;
-
+        boolean[] vis = new boolean[cities.length];
+        Arrays.fill(vis,false);
+        PriorityQueue<Pair> pq = new PriorityQueue<>();
+        pq.add(new Pair(source,0));
+        int ans = 0;
         while(!pq.isEmpty())
         {
-            Info node = pq.remove();
-            if(node.k<=stops)
+            Pair node = pq.remove();
+            if(vis[node.v]) continue;
+            vis[node.v] = true;
+            ans+= node.wt;
+            for(int i=0; i<cities[node.v].length; i++)
             {
-                for(Edge child : graph[node.v])
+                if(cities[node.v][i]!=0)
                 {
-                    if(distance[node.v]!= Integer.MAX_VALUE && distance[node.v]+child.wt<distance[child.dt])
-                    {
-                        distance[child.dt] = distance[node.v] + child.wt;
-                        pq.add(new Info(child.dt,distance[child.dt],node.k+1));
-                    }
+                    int v = i;
+                    int wt = cities[node.v][i];
+                    pq.add(new Pair(v,wt));
                 }
             }
         }
-        if(distance[destination]==Integer.MAX_VALUE)
-        {
-            System.out.println(-1);
-        }
-        else{
-            System.out.println(distance[destination]);
-        }
+
+        System.out.println(ans);
     }
 
     public static void main(String args[])
     {
         int N  = 3;
-        int[][] edges = {{0,1,100},{0,2,500},{1,2,100}};
-        int M = edges.length;
+        int[][] cities ={{0,1,2,3,4},
+                         {1,0,5,0,7},
+                         {2,5,0,6,0},
+                         {3,0,6,0,0},
+                         {4,7,0,0,0}};
 
-        ArrayList<Edge>[] Edges = new ArrayList[N];
-
-        for(int i=0; i<N; i++)
-        {
-            Edges[i] = new ArrayList<>();
-        }
-        for(int i=0; i<M; i++)
-        {
-            int x = edges[i][0];
-            int y = edges[i][1];
-            int wt = edges[i][2];
-            Edges[x].add(new Edge(x,y,wt));
-            // Edges[y].add(new Edge(y,x,wt));
-        }
-
-        cheapestFlights(Edges,0,2,1);
+        connectingCities(cities,0);
     }
 }
