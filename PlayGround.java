@@ -31,37 +31,35 @@ public class PlayGround
             return this.wt - ob2.wt;
         }
     }
-    public static void bellmanFord(ArrayList<Edge>[] graph,int source)
+
+    public static void primsAlgo(ArrayList<Edge>[] graph,int source)
     {
-        int N = graph.length;
-        int[] distance = new int[N];
-
-        Arrays.fill(distance,Integer.MAX_VALUE);
-        distance[source] = 0;
-
-        for(int i=0; i<N-1; i++)
+        boolean vis[] = new boolean[graph.length];
+        Arrays.fill(vis,false);
+        PriorityQueue<Pair> pq = new PriorityQueue<>();
+        pq.add(new Pair(source,0));
+        int minCost = 0;
+        while(!pq.isEmpty())
         {
-            for(int v=0; v<N; v++)
+            Pair node = pq.remove();
+            if(!vis[node.v])
             {
-                for(Edge child : graph[v])
+                minCost += node.wt;
+                vis[node.v] = true;
+                for(Edge child : graph[node.v])
                 {
-                    if(distance[v]!=Integer.MAX_VALUE && distance[v] + child.wt < distance[child.dt])
-                    {
-                        distance[child.dt] = distance[v] + child.wt;
-                    }
+                    if(vis[child.dt]) continue;                    
+                    pq.add(new Pair(child.dt,child.wt));
                 }
             }
         }
 
-        for(int i=0; i<distance.length; i++)
-        {
-            System.out.println(i+" distance = "+distance[i]);
-        }
+        System.out.println("Minimum cost = "+minCost);
     }
     public static void main(String args[])
     {
         int N  = 6;
-        int[][] edges = {{0,1,2},{0,2,4},{1,2,-4},{2,3,2},{3,4,4},{4,1,-1}};
+        int[][] edges = {{0,1,10},{0,2,15},{0,3,30},{1,3,40},{2,3,50}};
         int M = edges.length;
 
         ArrayList<Edge>[] Edges = new ArrayList[N];
@@ -76,9 +74,9 @@ public class PlayGround
             int y = edges[i][1];
             int wt = edges[i][2];
             Edges[x].add(new Edge(x,y,wt));
-            // Edges[y].add(new Edge(y,x,1));
+            Edges[y].add(new Edge(y,x,wt));
         }
 
-        bellmanFord(Edges,0);
+        primsAlgo(Edges,0);
     }
 }
