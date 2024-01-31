@@ -15,51 +15,60 @@ public class PlayGround
         }
     }
 
-    public static class Pair implements Comparable<Pair>
+    public static class Info implements Comparable<Info>
     {
         int v;
         int wt;
-
-        Pair(int v,int wt)
+        int k;
+        Info(int v,int wt,int k)
         {
             this.v = v;
             this.wt = wt;
+            this.k = k;
         }
         @Override
-        public int compareTo(Pair ob2)
+        public int compareTo(Info ob2)
         {
-            return this.wt - ob2.wt;
+            return this.k - ob2.k;
         }
     }
 
-    public static void primsAlgo(ArrayList<Edge>[] graph,int source)
+    public static void cheapestFlights(ArrayList<Edge>[] graph,int source,int destination,int stops)
     {
-        boolean vis[] = new boolean[graph.length];
-        Arrays.fill(vis,false);
-        PriorityQueue<Pair> pq = new PriorityQueue<>();
-        pq.add(new Pair(source,0));
-        int minCost = 0;
+        int[] distance = new int[graph.length];
+        Arrays.fill(distance,Integer.MAX_VALUE);
+        PriorityQueue<Info> pq = new PriorityQueue<>();
+        pq.add(new Info(source,0,0));
+        distance[source] = 0;
+
         while(!pq.isEmpty())
         {
-            Pair node = pq.remove();
-            if(!vis[node.v])
+            Info node = pq.remove();
+            if(node.k<=stops)
             {
-                minCost += node.wt;
-                vis[node.v] = true;
                 for(Edge child : graph[node.v])
                 {
-                    if(vis[child.dt]) continue;                    
-                    pq.add(new Pair(child.dt,child.wt));
+                    if(distance[node.v]!= Integer.MAX_VALUE && distance[node.v]+child.wt<distance[child.dt])
+                    {
+                        distance[child.dt] = distance[node.v] + child.wt;
+                        pq.add(new Info(child.dt,distance[child.dt],node.k+1));
+                    }
                 }
             }
         }
-
-        System.out.println("Minimum cost = "+minCost);
+        if(distance[destination]==Integer.MAX_VALUE)
+        {
+            System.out.println(-1);
+        }
+        else{
+            System.out.println(distance[destination]);
+        }
     }
+
     public static void main(String args[])
     {
-        int N  = 6;
-        int[][] edges = {{0,1,10},{0,2,15},{0,3,30},{1,3,40},{2,3,50}};
+        int N  = 3;
+        int[][] edges = {{0,1,100},{0,2,500},{1,2,100}};
         int M = edges.length;
 
         ArrayList<Edge>[] Edges = new ArrayList[N];
@@ -74,9 +83,9 @@ public class PlayGround
             int y = edges[i][1];
             int wt = edges[i][2];
             Edges[x].add(new Edge(x,y,wt));
-            Edges[y].add(new Edge(y,x,wt));
+            // Edges[y].add(new Edge(y,x,wt));
         }
 
-        primsAlgo(Edges,0);
+        cheapestFlights(Edges,0,2,1);
     }
 }
