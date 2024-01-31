@@ -3,14 +3,16 @@ import java.util.*;
 public class PlayGround
 {  
     
-    public static int fib(int n)
+    public static int fib(int n,int[] dp)
     {
         if(n==0 || n==1) return n;
-        return fib(n-1)+fib(n-2);
+        if(dp[n]!=0) return dp[n];
+        return dp[n] = fib(n-1,dp)+fib(n-2,dp);
     }
     public static void main(String args[])
     {
         int n = 5;
-        System.out.println(fib(n));
+        int[] dp = new int[n+1];
+        System.out.println(fib(n,dp));
     }
 }
