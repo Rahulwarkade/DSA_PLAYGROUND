@@ -1,77 +1,81 @@
 #include<iostream>
 using namespace std;
-bool isSafe(int* arr[],int x,int y,int n)
+void merge(int arr[],int l,int  mid,int r)
 {
-  for(int row = 0; row<x; row++)
-    {
-      if(arr[row][y]==1)
-        return false;
-    }
-  int row = x;
-  int col = y;
-  while(row>=0 && col>=0)
-    {
-      if(arr[row][col]==1)
-        return false;
+  int n1 = mid-l+1;
+  int n2 = r-mid;
 
-      row--;
-      col--;
-    }
-  
-   row = x;
-   col = y;
-  while(row>=0 && col<=n)
+  int arr1[n1];
+  int arr2[n2];
+
+  for(int i=0; i<n1; i++)
+      arr1[i] = arr[l+i];
+  for(int i=0; i<n2; i++)
+      arr2[i] = arr[mid+1+i];
+
+  int i = 0;
+  int j = 0;
+  int k = l;
+
+  while(i<n1 && j<n2)
     {
-      if(arr[row][col]==1)
-        return false;
-
-      row--;
-      col++;
-    }
-  return true;
-}
-
-bool nQueen(int* arr[],int x,int n)
-{
-  if(x>=n)
-  {
-    return true;
-  }
-
-  for(int col =0; col<n; col++)
-    {
-      if(isSafe(arr,x,col,n))
+      if(arr1[i]>arr2[j])
       {
-        arr[x][col] = 1;
-
-        if(nQueen(arr,x+1,n))
-        {
-          return true;
-        }
-        arr[x][col] = 0;
+        arr[k] = arr2[j];
+        k++;
+        j++;
+      }
+      else
+      {
+        arr[k] = arr1[i];
+        k++;
+        i++;
       }
     }
-      return false;   
+  while(i<n1)
+    {
+      arr[k] = arr1[i];
+      k++;
+      i++;
+    }
+  while(j<n2)
+    {
+      arr[k] = arr2[j];
+      k++;
+      j++;
+    }
+    
 }
+
+
+void mergeSort(int arr[],int l,int r)
+{
+  if(l<r)
+  {
+    int mid = (l+r)/2;
+    
+    mergeSort(arr,l,mid);
+    
+    mergeSort(arr,mid+1,r);
+    
+    merge(arr,l,mid,r);
+  }
+}
+
+
 int main()
 {
   int n;
   cin>>n;
-  int** arr = new int*[n];
+  int arr[n];
+  for(int i=0; i<n; i++)
+    cin>>arr[i];
+  mergeSort(arr,0,n);
 
-  for(int i=0; i<n; i++){
-    arr[i] = new int[n];
-    for(int j=0; j<n; j++)
-      arr[i][j] = 0;
-    }
-  
+  for(int i=0; i<n; i++)
+    cout<<arr[i]<<" ";
 
-  if(nQueen(arr,0,n))
-  {
-    for(int i=0; i<n; i++){
-      for(int j =0; j<n; j++)
-        cout<<arr[i][j]<<" ";
-      cout<<endl; 
-      }
-  }
+  cout<<endl;
+
+  return 0;
 }
