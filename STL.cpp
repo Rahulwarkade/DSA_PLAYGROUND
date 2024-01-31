@@ -1,122 +1,56 @@
-// #include<bits/stdc++.h>
-#include <iostream>
+#include<iostream>
 using namespace std;
 
-string array[] = {"",    "./",  "ABC",  "DEF", "GHI",
-                  "JKL", "MNO", "PQRS", "TUV", "WXYZ"};
-void revers(string str) {
-  if (str.length() == 0)
-    return;
-  char ch = str[0];
-  revers(str.substr(1));
-  cout << ch;
+void swap(int arr[],int i,int j)
+{
+  int temp = arr[i];
+  arr[i] = arr[j];
+  arr[j] =  temp;
 }
 
-void replacePi(string str) {
-  if (str.length() == 0)
-    return;
-  if (str[0] == 'p' && str[1] == 'i') {
-    cout << "3.14";
-    replacePi(str.substr(2));
-  } else {
-    cout << str[0];
-    replacePi(str.substr(1));
+int partition(int arr[],int l,int r)
+{
+  int pivot = arr[r];
+  int i = l-1;
+  for(int j=l; j<r; j++)
+    {
+      if(arr[j]<pivot)
+      {
+        i++;
+        swap(arr,i,j);
+      }
+    }
+  swap(arr,i+1,r);
+  return i+1;
+}
+
+void quickSort(int arr[],int l,int r)
+{
+  if(l<r)
+  {  
+    
+  int pi = partition(arr,l,r);
+  quickSort(arr,l,pi-1);
+  quickSort(arr,pi+1,r);
+    
   }
 }
 
-void TOH(int disk, char start, char Aux, char end) {
-  if (disk > 0) {
-    TOH(disk - 1, start, end, Aux);
-    cout << "disk " << start << " to disk " << end << endl;
-    TOH(disk - 1, Aux, start, end);
-  }
-}
 
-string removeDup(string str) {
-  if (str.length() == 0)
-    return "";
-  char ch = str[0];
-  string ans = removeDup(str.substr(1));
-  if (ch == ans[0]) {
-    return ans;
-  } else {
-    return ch + ans;
-  }
-}
+int main()
+{
+  int n; 
+  cin>>n;
+  int arr[n];
 
-string removeallX(string str) {
-  if (str.length() == 0)
-    return "";
-  char ch = str[0];
-  // string ans = removeallX(str.substr(1));
-  if (ch == 'x') {
-    return removeallX(str.substr(1)) + ch;
-  } else {
-    return ch + removeallX(str.substr(1));
-  }
-}
+  for(int i=0; i<n; i++)
+    cin>>arr[i];
 
-void substr(string str, string ans) {
-  if (str.length() == 0) {
-    cout << ans << endl;
-    return;
-  }
+  quickSort(arr,0,n-1);
 
-  char ch = str[0];
-  string ros = str.substr(1);
+  for(int i=0; i<n; i++)
+    cout<<arr[i]<<" ";
 
-  substr(ros, ans);
-  substr(ros, ans + ch);
-}
-
-void subStrwithAscii(string str, string ans) {
-  if (str.length() == 0) {
-    cout << ans << endl;
-    return;
-  }
-
-  char ch = str[0];
-  int ascii = ch;
-  string code = to_string(ascii);
-  string ros = str.substr(1);
-
-  subStrwithAscii(ros, ans);
-  subStrwithAscii(ros, ans + ch);
-  subStrwithAscii(ros, ans + code);
-}
-
-void keypad(string str, string ans) {
-  if (str.length() == 0) {
-    cout << ans << endl;
-    return;
-  }
-  char ch = str[0];
-  string code = array[ch - '0'];
-  string ros = str.substr(1);
-
-  for (int i = 0; i < code.length(); i++) {
-    keypad(ros, ans + code[i]);
-  }
-}
-
-int main() {
-  string str;
-  cin >> str;
-  char A, B, C;
-
-  revers(str);
-
-  replacePi(str);
-
-  TOH(3, 'A', 'B', 'C');
-
-  cout << removeDup(str) << endl;
-
-  cout << removeallX(str) << endl;
-
-  substr(str, "");
-
-  subStrwithAscii(str, "");
-
-  keypad(str, "");
+  cout<<endl;
+  return 0;
 }
