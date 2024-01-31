@@ -2,72 +2,58 @@ import java.util.*;
 
 public class PlayGround
 {  
-    public static class Edge
+    public static int N = 7;
+    public static int[] parent = new int[N];
+    public static int[] rank = new int[N];
+
+    public static void make()
     {
-        int sr;
-        int dt;
-        int wt;
-        Edge(int sr,int dt,int wt)
+        for(int i=0; i<N; i++)
         {
-            this.sr = sr;
-            this.dt = dt;
-            this.wt = wt;
+            parent[i] = i;
+            rank[i] = 0;
         }
     }
 
-    public static class Pair implements Comparable<Pair>
+    public static int find(int x)
     {
-        int v;
-        int wt;
-        Pair(int v,int wt)
-        {
-            this.v = v;
-            this.wt = wt;
-        }
-
-        @Override
-        public int compareTo(Pair obj)
-        {
-            return this.wt-obj.wt;
-        }
+        if(parent[x]==x) return x;
+        return parent[x] = find(parent[x]);
     }
 
-    public static void connectingCities(int[][] cities,int source)
+    public static void union(int a,int b)
     {
-        boolean[] vis = new boolean[cities.length];
-        Arrays.fill(vis,false);
-        PriorityQueue<Pair> pq = new PriorityQueue<>();
-        pq.add(new Pair(source,0));
-        int ans = 0;
-        while(!pq.isEmpty())
+        a = find(a);
+        b = find(b);
+        if(a!=b)
         {
-            Pair node = pq.remove();
-            if(vis[node.v]) continue;
-            vis[node.v] = true;
-            ans+= node.wt;
-            for(int i=0; i<cities[node.v].length; i++)
+            if(rank[a]==rank[b])
             {
-                if(cities[node.v][i]!=0)
-                {
-                    int v = i;
-                    int wt = cities[node.v][i];
-                    pq.add(new Pair(v,wt));
-                }
+                parent[b] = a;
+                rank[a]++;
+            }
+            else if(rank[a]>rank[b])
+            {
+                parent[b] = a;
+            }
+            else if(rank[a]<rank[b])
+            {
+                parent[a] = b;
             }
         }
-
-        System.out.println(ans);
     }
 
     public static void main(String args[])
     {
-        int N  = 3;
-        int[][] cities ={{0,1,2,3,4},
-                         {1,0,5,0,7},
-                         {2,5,0,6,0},
-                         {3,0,6,0,0},
-                         {4,7,0,0,0}};
-
-        connectingCities(cities,0);
+        make();
+        System.out.println(find(3));
+        union(1,3);
+        System.out.println(find(3));
+        union(2,4);
+        union(3,6);
+        union(1,4);
+        System.out.println(find(3));
+        System.out.println(find(4));
+        union(1,5);
     }
 }
