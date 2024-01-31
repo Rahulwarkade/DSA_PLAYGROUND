@@ -31,28 +31,24 @@ public class PlayGround
             return this.wt - ob2.wt;
         }
     }
-    public static void dijkstrasAlgo(ArrayList<Edge>[] graph,int source)
+    public static void bellmanFord(ArrayList<Edge>[] graph,int source)
     {
         int N = graph.length;
         int[] distance = new int[N];
-        boolean[] visited = new boolean[N];
+
         Arrays.fill(distance,Integer.MAX_VALUE);
-        Arrays.fill(visited,false);
-        PriorityQueue<Pair> pq =new PriorityQueue<>();
-        pq.add(new Pair(source,0));
         distance[source] = 0;
 
-        while(!pq.isEmpty())
+        for(int i=0; i<N-1; i++)
         {
-            Pair node = pq.remove();
-            if(visited[node.v]) continue;
-            visited[node.v] = true;
-            for(Edge child : graph[node.v])
+            for(int v=0; v<N; v++)
             {
-                if(distance[node.v]+child.wt<distance[child.dt])
+                for(Edge child : graph[v])
                 {
-                    distance[child.dt] = distance[node.v]+child.wt;
-                    pq.add(new Pair(child.dt,distance[child.dt]));
+                    if(distance[v]!=Integer.MAX_VALUE && distance[v] + child.wt < distance[child.dt])
+                    {
+                        distance[child.dt] = distance[v] + child.wt;
+                    }
                 }
             }
         }
@@ -65,7 +61,7 @@ public class PlayGround
     public static void main(String args[])
     {
         int N  = 6;
-        int[][] edges = {{0,1,2},{0,2,4},{1,2,1},{1,3,7},{2,4,3},{3,5,1},{4,3,2},{4,5,5}};
+        int[][] edges = {{0,1,2},{0,2,4},{1,2,-4},{2,3,2},{3,4,4},{4,1,-1}};
         int M = edges.length;
 
         ArrayList<Edge>[] Edges = new ArrayList[N];
@@ -83,6 +79,6 @@ public class PlayGround
             // Edges[y].add(new Edge(y,x,1));
         }
 
-        dijkstrasAlgo(Edges,0);
+        bellmanFord(Edges,0);
     }
 }
