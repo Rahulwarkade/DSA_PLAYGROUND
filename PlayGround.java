@@ -2,101 +2,41 @@ import java.util.*;
 
 public class PlayGround
 {  
-    public static class Edge implements Comparable<Edge>
+ 
+    public static void floodFillUtil(int[][] image,int sr,int sc,int newCol,int orgCol,boolean[][] vis)
     {
-        int src;
-        int dst;
-        int wt;
-        Edge(int src,int dst,int wt)
-        {
-            this.src = src;
-            this.dst = dst;
-            this.wt  = wt;
-        }
+        if(sr<0 || sc<0 || sr>=image.length || sc>=image[0].length || vis[sr][sc] || image[sr][sc]!=orgCol) return;
+        image[sr][sc] = newCol;
+        vis[sr][sc] = true;
 
-        @Override
-        public int compareTo(Edge obj)
-        {
-            return this.wt - obj.wt;
-        }
+        floodFillUtil(image,sr-1,sc,newCol,orgCol,vis);
+        floodFillUtil(image,sr+1,sc,newCol,orgCol,vis);
+        floodFillUtil(image,sr,sc-1,newCol,orgCol,vis);
+        floodFillUtil(image,sr,sc+1,newCol,orgCol,vis);
     }
-    public static int N = 4;
-    public static int[] parent = new int[N];
-    public static int[] rank = new int[N];
-
-    public static void make()
+    public static int[][] floodFill(int[][] image,int sr,int sc,int newCol)
     {
-        for(int i=0; i<N; i++)
-        {
-            parent[i] = i;
-            rank[i] = 0;
-        }
-    }
+        boolean[][] vis = new boolean[image.length][image[0].length];
+        for(int i=0; i<vis.length; i++)
+            Arrays.fill(vis[i],false);
+        
+        floodFillUtil(image,sr,sc,newCol,image[sr][sc],vis);
 
-    public static int find(int x)
-    {
-        if(parent[x]==x) return x;
-        return parent[x] = find(parent[x]);
-    }
-
-    public static void union(int a,int b)
-    {
-        a = find(a);
-        b = find(b);
-        if(a!=b)
-        {
-            if(rank[a]==rank[b])
-            {
-                parent[b] = a;
-                rank[a]++;
-            }
-            else if(rank[a]>rank[b])
-            {
-                parent[b] = a;
-            }
-            else if(rank[a]<rank[b])
-            {
-                parent[a] = b;
-            }
-        }
-    }
-
-    public static void krushkalsAlgo(int[][] edges,int V)
-    {
-        int minCost = 0;
-        make();
-        ArrayList<Edge> list = new ArrayList<>();
-
-        for(int i=0; i<edges.length; i++)
-        {
-            int src = edges[i][0];
-            int dst = edges[i][1];
-            int wt = edges[i][2];
-            list.add(new Edge(src,dst,wt));
-        }
-        Collections.sort(list);
-
-        for(int i=0; i<V-1; i++)
-        {
-            Edge e = list.get(i);
-            int a = e.src;
-            int b = e.dst;
-            a = find(a);
-            b = find(b);
-            if(a!=b)
-            {
-                union(a,b);
-                minCost+=e.wt;
-            }
-        }
-
-        System.out.println("Minimum Cost using Krushkals algo = "+minCost);
+        return image;
     }
     public static void main(String args[])
     {
-        int V = 4;
-        int edges[][] = {{0,1,10},{0,2,15},{0,3,30},{1,3,40},{2,3,50}};
-        
-        krushkalsAlgo(edges,V);
+        int[][] image = {{1,1,1},
+                             {1,1,0},
+                             {1,0,1}};
+
+        image = floodFill(image,1,1,2);
+
+        for(int i=0; i<image.length; i++)
+        {
+            for(int j=0; j<image[i].length; j++)
+                System.out.print(image[i][j]+" ");
+            System.out.println();
+        }
     }
 }
