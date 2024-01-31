@@ -3,16 +3,16 @@ import java.util.*;
 public class PlayGround
 {  
     
-    public static int fib(int n,int[] dp)
+    public static int climbingStairs(int n)
     {
-        if(n==0 || n==1) return n;
-        if(dp[n]!=0) return dp[n];
-        return dp[n] = fib(n-1,dp)+fib(n-2,dp);
+        if(n==0) return 1;
+        if(n<0) return 0;
+
+        return climbingStairs(n-1)+climbingStairs(n-2);
     }
     public static void main(String args[])
     {
         int n = 5;
-        int[] dp = new int[n+1];
-        System.out.println(fib(n,dp));
+        System.out.println(climbingStairs(n));
     }
 }
