@@ -13,12 +13,17 @@ public class Java_PlayGround
 
 	public static int nCr(int row, int col)
 	{
-		int  n = factorial(row);
-		int  c = factorial(col);
-		int  n_minus_c = factorial(row-col);
-		int  temp = n_minus_c*c;
-		int  ncr = n/temp;
+		int ncr =1;
+
+		for(int i=1; i<=col; i++)
+		{
+			ncr *= row;
+			row--;
+			ncr /= i;
+		}
+
 		return ncr;
+
 	}
 
 	public static int pascal(int r,int c)
