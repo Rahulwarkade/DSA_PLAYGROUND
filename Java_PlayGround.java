@@ -1,43 +1,26 @@
 import java.util.*;
-
+import java.math.BigInteger;
+import java.math.BigDecimal;
 public class Java_PlayGround
 {
-	public static int[] arr = new int[100];
+	public static int[] arr = new int[200];
 
 	public static void main(String [] args)
 	{
 
-		int N;
-		Scanner jin = new Scanner(System.in);
-		N = jin.nextInt();
+		BigInteger A = new BigInteger("1999999999222");
+		BigInteger B = new BigInteger("10000000002323");
 
-		arr[0] = 1;
-		int len = 1;
-		int fact = 1;
-		int carry = 0;
-		for(int i=1; i<=N; i++)
-		{
-			int j = 0;
-			while(j<len)
-			{
-				fact = arr[j] * i + carry;
-				arr[j] = fact%10;
-				carry = fact/10;
-				j++;
-			}
 
-			while(carry!=0)
-			{
-				arr[len] = carry%10;
-				carry/=10;
-				len++;
-			}
+		System.out.println("Addition = "+ A.add(B));
+		System.out.println("Subtraction = "+ A.subtract(B));
+		System.out.println("Multiplication = "+ A.multiply(B));
+		System.out.println("Division = "+ A.divide(B));
+		System.out.println("remainder = "+ A.remainder(B));
 
-			for(int k=len-1; k>=0; k--)
-			{
-				System.out.print(arr[k]);
-			}
-			System.out.println();
-		}
+		BigDecimal X = new BigDecimal("0.03");
+		BigDecimal Y = new BigDecimal("0.04");
+
+		System.out.println(Y.subtract(X));
 	}
 }
