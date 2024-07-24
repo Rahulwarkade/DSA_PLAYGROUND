@@ -1,65 +1,39 @@
 import java.util.*;
-import java.util.Scanner;
 
-public class Java_PlayGround
+class Java_PlayGround
 {
+ 
+    public static int _01Knapsack(int[] val,int[] wt,int W,int item)
+    {
+        if(item==val.length || W<=0) return 0;
 
+        if(W>=wt[item])
+            return Math.max(val[item] + _01Knapsack(val,wt,W-wt[item],item+1),_01Knapsack(val,wt,W,item+1));
+        else
+            return _01Knapsack(val,wt,W,item+1);
+    }
 
-	public static void majorityElm(int[] nums)
-	{
-		int n = nums.length;
-		int cnt1,cnt2,elm1,elm2;
-		cnt1 = cnt2=0;
-		elm1 =elm2 = Integer.MAX_VALUE;
+    public static void main(String args[])
+    {
+        int N;
+        Scanner sc = new Scanner(System.in);
 
-		for(int i=0; i<n; i++)
-		{
-			if(cnt1==0 && nums[i]!=elm2)
-			{
-				cnt1 = 1;
-				elm1 = nums[i];
-			}
-			else if(cnt2==0 && nums[i]!=elm1)
-			{
-				cnt2 = 1;
-				elm2 = nums[i];
-			}
-			else if(nums[i]==elm1) cnt1++;
-			else if(nums[i]==elm2) cnt2++;
-			else{
-				cnt1--;
-				cnt2--;
-			}
-		}
+        N = sc.nextInt();
 
-		List<Integer> ls = new ArrayList<>();
-		cnt1 = cnt2 = 0;
-		for(int i=0; i<n; i++)
-		{
-			if(nums[i]==elm1) cnt1++;
-			if(nums[i]==elm2) cnt2++;
-		}
-		int mini = (n/3)+1;
+        int[] val = new int[N];
+        int[] wt = new int[N];
 
-		if(cnt1>=mini) ls.add(elm1);
-		if(cnt2>=mini) ls.add(elm2);
+        for(int i=0; i<N; i++)
+        {
+            val[i] = sc.nextInt();
+        }
 
-		System.out.println(ls);
-	}
-	public static void main(String [] args)
-	{
-		int n;
+        for(int i=0; i<N; i++)
+        {
+            wt[i] = sc.nextInt();
+        }
 
-		Scanner sc = new Scanner(System.in);
-		n = sc.nextInt();
-
-		int[] arr = new int[n];
-
-		for(int i=0; i<n; i++)
-			arr[i] = sc.nextInt();
-
-		
-		majorityElm(arr);
-
-	}
+        System.out.println(_01Knapsack(val,wt,7,0));
+    }
 }
+
