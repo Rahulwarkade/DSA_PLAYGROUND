@@ -3,18 +3,53 @@ import java.util.*;
 class Java_PlayGround
 {
  
-    public static int _01Knapsack(int[] val,int[] wt,int W,int item,int[][] dp)
+    public static void printTable(int [][] tab)
     {
-        if(item==val.length || W<=0) return 0;
-
-        if(dp[item][W]!=-1) return dp[item][W];
-
-        if(W>=wt[item])
-            return dp[item][W] = Math.max(val[item] + _01Knapsack(val,wt,W-wt[item],item+1,dp),_01Knapsack(val,wt,W,item+1,dp));
-        else
-            return dp[item][W] = _01Knapsack(val,wt,W,item+1,dp);
+        for(int i=0; i<tab.length; i++)
+        {
+            for (int j=0; j<tab[0].length; j++) {
+                System.out.print(tab[i][j]+" ");
+            }
+            System.out.println();
+        }
     }
+    public static int tabulation(int[] val,int[] wt,int W)
+    {
+        int N = val.length;
+        int table[][] = new int[N+1][W+1];
 
+        for(int i=0; i<=N; i++)
+        {
+            table[i][0] = 0;
+        }
+        for(int i=0; i<=W; i++)
+        {
+            table[0][i] = 0;
+        }
+
+        for(int i=1; i<=N; i++)
+        {
+            for(int j=1; j<=W; j++)
+            {
+                int cost = val[i-1];
+                int weight = wt[i-1];
+                if(weight<=j)
+                {
+                    int ans1 = cost + table[i-1][j-weight];
+                    int ans2 = table[i-1][j];
+                    table[i][j] = Math.max(ans1,ans2);
+                }
+                else
+                {
+                    table[i][j] = table[i-1][j];
+                }
+            }
+        }
+        printTable(table);
+
+
+        return table[N][W];
+    }
     public static void main(String args[])
     {
         int N;
@@ -24,10 +59,6 @@ class Java_PlayGround
 
         int[] val = new int[N];
         int[] wt = new int[N];
-
-        int[][] dp = new int[N][7+1];
-        for(int i=0; i<N; i++)
-            Arrays.fill(dp[i],-1);
 
 
 
@@ -41,7 +72,7 @@ class Java_PlayGround
             wt[i] = sc.nextInt();
         }
 
-        System.out.println(_01Knapsack(val,wt,7,0,dp));
+        System.out.println(tabulation(val,wt,15));
     }
 }
 
