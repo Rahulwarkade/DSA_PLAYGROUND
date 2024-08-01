@@ -2,26 +2,44 @@ import java.util.*;
 
 public class Java_PlayGround {
 
-
-    public static int unboundedKnapsack(int[] val,int[] wt,int W,int item)
+    public static int lcsTab(String str1,String str2)
     {
+        int N,M;
+        N = str1.length();
+        M = str2.length();
+        int[][] dp = new int[N+1][M+1];
 
-        if(W<=0 || item==wt.length) return 0;
-
-        if(wt[item]<=W)
+        for(int i=0; i<=N; i++)
         {
-            return Math.max(val[item]+unboundedKnapsack(val,wt,W-wt[item],item),unboundedKnapsack(val,wt,W,item+1));
+            for(int j=0; j<=M; j++)
+            {
+                if(i==0 || j==0) dp[i][j] = 0;
+            }
         }
-        else{
-            return unboundedKnapsack(val,wt,W,item+1);
+
+        for(int i=1; i<=N; i++)
+        {
+            for(int j=1; j<=M; j++)
+            {
+                if(str1.charAt(i-1)==str2.charAt(j-1))
+                {
+                    dp[i][j] = dp[i-1][j-1] +1;
+                }
+                else
+                {
+                    dp[i][j] = Math.max(dp[i][j-1],dp[i-1][j]);
+                }
+            }
         }
+        return dp[N][M];
     }
 
     public static void main(String[] args) {
     
-        int[] val = {15,14,10,45,30};
-        int[] wt = {2,5,1,3,4};
+        String str1 = "abcde";
+        String str2 = "ace";
 
-        System.out.println(unboundedKnapsack(val,wt,7,0));
+
+        System.out.println(lcsTab(str1,str2));
     }
 }
