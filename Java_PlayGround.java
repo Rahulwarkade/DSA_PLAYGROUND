@@ -2,45 +2,26 @@ import java.util.*;
 
 public class Java_PlayGround{
 
-    public static boolean wildCardMatching(String pattern1, String pattern2)
+    public static int catalanNumber(int n,int[] dp)
     {
-        int N = pattern1.length();
-        int M = pattern1.length();
-        boolean[][] dp = new boolean[N+1][M+1];
-        dp[0][0] = true;
-        for(int i=1; i<=N; i++) dp[0][i] = false;
+        if(dp[n]!=-1) return dp[n];
+        if(n==1 || n==0) return 1;
 
-        for(int i=1; i<=M; i++)
+        int catalan = 0;
+
+        for(int i=0; i<n; i++)
         {
-            if(pattern2.charAt(i)=='*')
-                dp[i][0] = dp[i-1][0];
-            else 
-                dp[i][0] = false;
+            catalan += catalanNumber(i,dp) * catalanNumber(n-i-1,dp);
         }
 
-        for(int i=1; i<=N; i++)
-        {
-            for(int j=1; j<=M; j++)
-            {
-                if(pattern1.charAt(i-1)==pattern2.charAt(j-1) || pattern1.charAt(i-1)=='?')
-                {
-                    dp[i][j] = dp[i-1][j-1];
-                }
-                else 
-                {
-                    dp[i][j] = (dp[i-1][j] || dp[i][j-1]);
-                }
-            }
-        }
-        return dp[N][M];
+         return dp[n] = catalan;
     }
-
     public static void main(String[] args) {
-    
-        String str1 = "baaabaad";
-        String str2 = "*****ba*ad";
+        int n =4;
 
+        int[] dp = new int[n+1];
+        Arrays.fill(dp,-1);
+        System.out.println(catalanNumber(n,dp));
 
-        System.out.println(wildCardMatching(str1,str2));
     }
 }
