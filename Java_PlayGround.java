@@ -2,23 +2,27 @@ import java.util.*;
 
 public class Java_PlayGround{
 
-    public static int catalanNumberTab(int n)
+    public static int mcm(int[] matrix,int i,int j)
     {
-        int[] dp = new int[n+1];
-        dp[0] = dp[1] = 1;
-
-        for(int i=2; i<=n; i++)
+        if(i==j) return 0;
+        int minCost = Integer.MAX_VALUE;
+        for(int k=i; k<j; k++)
         {
-            for(int j=0; j<i; j++)
-            {
-                dp[i] += dp[j]*dp[i-j-1];
-            }
-        } 
-        return dp[n];
+            int leftCost = mcm(matrix,i,k);
+            int rightCost = mcm(matrix,k+1,j);
+            int result = (matrix[i-1]*matrix[k]*matrix[j]);
+
+            result += (leftCost+rightCost); 
+            minCost = Math.min(minCost,result);
+        }
+
+        return minCost;
     }
     public static void main(String[] args) {
 
-        System.out.println(catalanNumberTab(4));
+        int matrix[] = {1,2,3,4,3};
+
+        System.out.println(mcm(matrix,1,4));
 
     }
 }
