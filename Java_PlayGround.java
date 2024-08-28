@@ -2,32 +2,45 @@ import java.util.*;
 
 public class Java_PlayGround{
 
-    public static int mcm(int[] matrix,int i,int j,int[][] dp)
+    public static void printGraph(int[][] graph)
     {
-        if(i==j) return 0;
-        int minCost = Integer.MAX_VALUE;
-        if(dp[i][j]!=-1) return dp[i][j];
-        for(int k=i; k<j; k++)
+        for(int i=0; i<graph.length; i++)
         {
-            int leftCost = mcm(matrix,i,k,dp);
-            int rightCost = mcm(matrix,k+1,j,dp);
-            int result = (matrix[i-1]*matrix[k]*matrix[j]);
-
-            result += (leftCost+rightCost); 
-            minCost = Math.min(minCost,result);
+            for(int j=0; j<graph[0].length; j++)
+                System.out.print(graph[i][j]+ " ");
+            System.out.println();
         }
 
-        return dp[i][j] = minCost;
+    }
+
+    public static int N = 70;
+    public static int[][] graph = new int[N+1][N+1];
+    // matrix
+    // Space Complexity = O(N*N)
+    public static void graphMatrix()
+    {
+        int V,E;
+
+        Scanner sc = new Scanner(System.in);
+
+        V = sc.nextInt();
+        E = sc.nextInt();
+
+        for(int i=0; i<E; i++)
+        {
+            int x,y;
+            x = sc.nextInt();
+            y = sc.nextInt();
+            graph[x][y] = 1;
+            graph[y][x] = 1;
+        }
+
     }
     public static void main(String[] args) {
 
-        int matrix[] = {1,2,3,4,3};
-        int n = 5;
-        int[][] dp = new int[n][n];
-        for(int i=0; i<n; i++)
-            Arrays.fill(dp[i],-1);
+        Scanner sc = new Scanner(System.in);
+        graphMatrix();
 
-        System.out.println(mcm(matrix,1,n-1,dp));
-
+        printGraph(graph);
     }
 }
