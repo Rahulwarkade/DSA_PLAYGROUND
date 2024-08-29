@@ -13,6 +13,26 @@ public class Java_PlayGround{
                 depthFirstSearch(graph,child,visited);
         }
     }
+
+    public static void breadthFirstSearch(HashMap<Integer,ArrayList<Integer>> graph,int root,HashMap<Integer,Boolean> visited)
+    {
+        Queue<Integer> q = new LinkedList<>();
+        visited.put(root,true);
+        q.add(root);
+
+        while(!q.isEmpty())
+        {
+            int node = q.remove();
+            System.out.println(node);
+            for(Integer child : graph.get(node))
+            {
+                if(!visited.get(child)){
+                    visited.put(child,true);
+                    q.add(child);
+                }
+            }
+        }
+    }
     // maping in graph
     public static void graphMap(HashMap<Integer,ArrayList<Integer>> graph)
     {
@@ -51,6 +71,6 @@ public class Java_PlayGround{
         visited.put(keys,false);
     }
 
-    depthFirstSearch(graph,20,visited);
+    breadthFirstSearch(graph,20,visited);
     }
 }
