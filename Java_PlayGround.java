@@ -2,45 +2,55 @@ import java.util.*;
 
 public class Java_PlayGround{
 
-    public static void printGraph(int[][] graph)
+
+    public static void depthFirstSearch(HashMap<Integer,ArrayList<Integer>> graph,int root,HashMap<Integer,Boolean> visited)
     {
-        for(int i=0; i<graph.length; i++)
+        System.out.println(root);
+        visited.put(root,true);
+        for(Integer child : graph.get(root))
         {
-            for(int j=0; j<graph[0].length; j++)
-                System.out.print(graph[i][j]+ " ");
-            System.out.println();
+            if(!visited.get(child))
+                depthFirstSearch(graph,child,visited);
         }
-
     }
-
-    public static int N = 70;
-    public static int[][] graph = new int[N+1][N+1];
-    // matrix
-    // Space Complexity = O(N*N)
-    public static void graphMatrix()
+    // maping in graph
+    public static void graphMap(HashMap<Integer,ArrayList<Integer>> graph)
     {
         int V,E;
-
         Scanner sc = new Scanner(System.in);
-
         V = sc.nextInt();
         E = sc.nextInt();
+
 
         for(int i=0; i<E; i++)
         {
             int x,y;
             x = sc.nextInt();
             y = sc.nextInt();
-            graph[x][y] = 1;
-            graph[y][x] = 1;
+            if(!graph.containsKey(x)){
+                graph.put(x,new ArrayList<>());
+            }
+            if(!graph.containsKey(y)){
+                graph.put(y,new ArrayList<>());
+            }
+
+            graph.get(x).add(y);
+            graph.get(y).add(x);
         }
 
     }
     public static void main(String[] args) {
+    HashMap<Integer,ArrayList<Integer>> graph = new HashMap<>();
 
-        Scanner sc = new Scanner(System.in);
-        graphMatrix();
+    graphMap(graph);
 
-        printGraph(graph);
+    HashMap<Integer,Boolean> visited = new HashMap<>();
+
+    for(Integer keys : graph.keySet())
+    {
+        visited.put(keys,false);
+    }
+
+    depthFirstSearch(graph,20,visited);
     }
 }
