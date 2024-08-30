@@ -61,7 +61,27 @@ public class Java_PlayGround{
             graph.get(y).add(x);     
             }
         }
+    }
 
+    public static boolean hashPath(HashMap<Integer,ArrayList<Integer>> graph,HashMap<Integer,Boolean> visited,int src,int dest)
+    {
+        if(src==dest)
+        {
+            return true;
+        }
+        visited.put(src,true);
+
+        for(Integer child : graph.get(src))
+        {
+            if(!visited.get(child))
+            {
+                if(hashPath(graph,visited,child,dest))
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
     public static void main(String[] args) {
     HashMap<Integer,ArrayList<Integer>> graph = new HashMap<>();
@@ -74,17 +94,6 @@ public class Java_PlayGround{
         visited.put(keys,false);
     }
 
-    int cc = 0;
-
-    for(Integer keys : graph.keySet())
-    {
-        if(!visited.get(keys))
-        {
-            breadthFirstSearch(graph,keys,visited);
-            cc++;
-        }
-    }
-
-    System.out.println("Connected Components = "+ cc);
+    System.out.println("Hash a path = "+hashPath(graph,visited,20,24));
     }
 }
