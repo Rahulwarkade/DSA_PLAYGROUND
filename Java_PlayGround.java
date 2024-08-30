@@ -34,6 +34,8 @@ public class Java_PlayGround{
         }
     }
     // maping in graph
+    // public static HashMap<Integer,Boolean> visited = new HashMap<>();
+
     public static void graphMap(HashMap<Integer,ArrayList<Integer>> graph)
     {
         int V,E;
@@ -54,8 +56,10 @@ public class Java_PlayGround{
                 graph.put(y,new ArrayList<>());
             }
 
+            if(x!=y){
             graph.get(x).add(y);
-            graph.get(y).add(x);
+            graph.get(y).add(x);     
+            }
         }
 
     }
@@ -63,7 +67,6 @@ public class Java_PlayGround{
     HashMap<Integer,ArrayList<Integer>> graph = new HashMap<>();
 
     graphMap(graph);
-
     HashMap<Integer,Boolean> visited = new HashMap<>();
 
     for(Integer keys : graph.keySet())
@@ -71,6 +74,17 @@ public class Java_PlayGround{
         visited.put(keys,false);
     }
 
-    breadthFirstSearch(graph,20,visited);
+    int cc = 0;
+
+    for(Integer keys : graph.keySet())
+    {
+        if(!visited.get(keys))
+        {
+            breadthFirstSearch(graph,keys,visited);
+            cc++;
+        }
+    }
+
+    System.out.println("Connected Components = "+ cc);
     }
 }
