@@ -29,44 +29,40 @@ public class Java_PlayGround{
         }
     }
 
-    public static boolean isCycleUtil(HashMap<Integer,ArrayList<Integer>> graph,HashMap<Integer,Boolean> visited,HashMap<Integer,Boolean> stack,int root)
+    public static void topSortUtil(HashMap<Integer,ArrayList<Integer>> graph,HashMap<Integer,Boolean> visited,Stack<Integer> st,int root)
     {
         visited.put(root,true);
-        stack.put(root,true);
-
         for(Integer child : graph.get(root))
         {
             if(!visited.get(child))
             {
-                if(isCycleUtil(graph,visited,stack,child)) return true;
-            }
-            else if(visited.get(child) && stack.get(child))
-            {
-                return true;
+                topSortUtil(graph,visited,st,child);
             }
         }
-        stack.put(root,false);
-        return false;
+        st.push(root);
     }
-
-    public static boolean isCycle(HashMap<Integer,ArrayList<Integer>> graph)
+    public static void topSort(HashMap<Integer,ArrayList<Integer>> graph)
     {
         HashMap<Integer,Boolean> visited = new HashMap<>();
-        HashMap<Integer,Boolean> stack = new HashMap<>();
+        Stack<Integer> st = new Stack<>();
+
         for(Integer key : graph.keySet())
         {
             visited.put(key,false);
-            stack.put(key,false);
         }
 
         for(Integer key : visited.keySet())
         {
             if(!visited.get(key))
             {
-                if(isCycleUtil(graph,visited,stack,key)) return true;
+                topSortUtil(graph,visited,st,key);
             }
         }
-        return false;
+
+        while(!st.isEmpty())
+        {
+            System.out.println(st.pop());
+        }
     }
 
     public static void main(String[] args) {
@@ -74,7 +70,7 @@ public class Java_PlayGround{
 
         graphMap(graph);
 
-        System.out.println("Cycle detected = "+ isCycle(graph));
+        topSort(graph);
 
     }
 
