@@ -29,42 +29,50 @@ public class Java_PlayGround{
         }
     }
 
-    public static void topSortUtil(HashMap<Integer,ArrayList<Integer>> graph,HashMap<Integer,Boolean> visited,Stack<Integer> st,int root)
+    public static void indgreeUtil(HashMap<Integer,ArrayList<Integer>> graph,HashMap<Integer,Integer> indgree)
     {
-        visited.put(root,true);
-        for(Integer child : graph.get(root))
+        for(Integer key : graph.keySet())
         {
-            if(!visited.get(child))
-            {
-                topSortUtil(graph,visited,st,child);
-            }
+            indgree.put(key,0);
         }
-        st.push(root);
-    }
-    public static void topSort(HashMap<Integer,ArrayList<Integer>> graph)
-    {
-        HashMap<Integer,Boolean> visited = new HashMap<>();
-        Stack<Integer> st = new Stack<>();
 
         for(Integer key : graph.keySet())
         {
-            visited.put(key,false);
-        }
-
-        for(Integer key : visited.keySet())
-        {
-            if(!visited.get(key))
+            for(Integer child : graph.get(key))
             {
-                topSortUtil(graph,visited,st,key);
+                indgree.put(child,indgree.get(child)+1);
             }
         }
 
-        while(!st.isEmpty())
+    }
+    public static void topSort(HashMap<Integer,ArrayList<Integer>> graph)
+    {
+        HashMap<Integer,Integer> indgree = new HashMap<>();
+        indgreeUtil(graph,indgree);
+
+        Queue<Integer> q = new LinkedList<>();
+        for(Integer val : indgree.keySet())
         {
-            System.out.println(st.pop());
+            if(indgree.get(val)==0)
+            {
+                q.add(val);
+            }
+        }
+
+        while(!q.isEmpty())
+        {
+            int vertex = q.remove();
+            System.out.println(vertex);
+            for(Integer child : graph.get(vertex))
+            {
+                indgree.put(child,indgree.get(child)-1);
+                if(indgree.get(child)==0)
+                {
+                    q.add(child);
+                }
+            }
         }
     }
-
     public static void main(String[] args) {
         HashMap<Integer,ArrayList<Integer>> graph = new HashMap<>();
 
