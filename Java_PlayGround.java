@@ -3,38 +3,17 @@ import java.util.*;
 public class Java_PlayGround{
 
 
-    public static void depthFirstSearch(HashMap<Integer,ArrayList<Integer>> graph,int root,HashMap<Integer,Boolean> visited)
+    public static void depthFirstSearchUtil(HashMap<Integer,ArrayList<Integer>> graph,int root,HashMap<Integer,Boolean> visited)
     {
         System.out.println(root);
         visited.put(root,true);
         for(Integer child : graph.get(root))
         {
             if(!visited.get(child))
-                depthFirstSearch(graph,child,visited);
+                depthFirstSearchUtil(graph,child,visited);
         }
     }
 
-    public static void breadthFirstSearch(HashMap<Integer,ArrayList<Integer>> graph,int root,HashMap<Integer,Boolean> visited)
-    {
-        Queue<Integer> q = new LinkedList<>();
-        visited.put(root,true);
-        q.add(root);
-
-        while(!q.isEmpty())
-        {
-            int node = q.remove();
-            System.out.println(node);
-            for(Integer child : graph.get(node))
-            {
-                if(!visited.get(child)){
-                    visited.put(child,true);
-                    q.add(child);
-                }
-            }
-        }
-    }
-    // maping in graph
-    // public static HashMap<Integer,Boolean> visited = new HashMap<>();
 
     public static void graphMap(HashMap<Integer,ArrayList<Integer>> graph)
     {
@@ -63,37 +42,33 @@ public class Java_PlayGround{
         }
     }
 
-    public static boolean hashPath(HashMap<Integer,ArrayList<Integer>> graph,HashMap<Integer,Boolean> visited,int src,int dest)
-    {
-        if(src==dest)
-        {
-            return true;
-        }
-        visited.put(src,true);
 
-        for(Integer child : graph.get(src))
+    public static void dfs(HashMap<Integer,ArrayList<Integer>> graph)
+    {
+        HashMap<Integer,Boolean> visited = new HashMap<>();
+
+        for(Integer keys : graph.keySet())
         {
-            if(!visited.get(child))
+            visited.put(keys,false);
+        }
+
+        for(Integer key : graph.keySet())
+        {
+            if(!visited.get(key))
             {
-                if(hashPath(graph,visited,child,dest))
-                {
-                    return true;
-                }
+                depthFirstSearchUtil(graph,key,visited);
             }
         }
-        return false;
+ 
     }
+
     public static void main(String[] args) {
     HashMap<Integer,ArrayList<Integer>> graph = new HashMap<>();
 
     graphMap(graph);
-    HashMap<Integer,Boolean> visited = new HashMap<>();
 
-    for(Integer keys : graph.keySet())
-    {
-        visited.put(keys,false);
+    dfs(graph);
+
     }
 
-    System.out.println("Hash a path = "+hashPath(graph,visited,20,24));
-    }
 }
