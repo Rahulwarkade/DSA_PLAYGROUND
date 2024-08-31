@@ -3,15 +3,21 @@ import java.util.*;
 public class Java_PlayGround{
 
 
-    public static void depthFirstSearchUtil(HashMap<Integer,ArrayList<Integer>> graph,int root,HashMap<Integer,Boolean> visited)
+    public static boolean cycleDetectionUtil(HashMap<Integer,ArrayList<Integer>> graph,int root,HashMap<Integer,Boolean> visited,int parent)
     {
         System.out.println(root);
         visited.put(root,true);
         for(Integer child : graph.get(root))
         {
-            if(!visited.get(child))
-                depthFirstSearchUtil(graph,child,visited);
+            if(!visited.get(child)){
+                if(cycleDetectionUtil(graph,child,visited,root)) return true;
+            }
+            else if(visited.get(child) && child!=parent) {
+                System.out.print(child + " " + parent);
+                return true;
+            }
         }
+        return false;
     }
 
 
@@ -43,7 +49,7 @@ public class Java_PlayGround{
     }
 
 
-    public static void dfs(HashMap<Integer,ArrayList<Integer>> graph)
+    public static boolean cycleDetection(HashMap<Integer,ArrayList<Integer>> graph)
     {
         HashMap<Integer,Boolean> visited = new HashMap<>();
 
@@ -56,9 +62,10 @@ public class Java_PlayGround{
         {
             if(!visited.get(key))
             {
-                depthFirstSearchUtil(graph,key,visited);
+                if(cycleDetectionUtil(graph,key,visited,-1)) return true;
             }
         }
+        return false;
  
     }
 
@@ -67,7 +74,7 @@ public class Java_PlayGround{
 
     graphMap(graph);
 
-    dfs(graph);
+        System.out.println("Cycle exits = "+ cycleDetection(graph));
 
     }
 
