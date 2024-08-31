@@ -24,56 +24,57 @@ public class Java_PlayGround{
 
             if(x!=y){
             graph.get(x).add(y);
-            graph.get(y).add(x);     
+            // graph.get(y).add(x);     
             }
         }
     }
 
-    public static boolean bipartite(HashMap<Integer,ArrayList<Integer>> graph)
+    public static boolean isCycleUtil(HashMap<Integer,ArrayList<Integer>> graph,HashMap<Integer,Boolean> visited,HashMap<Integer,Boolean> stack,int root)
     {
-        HashMap<Integer,Integer> color = new HashMap<>();
-        Queue<Integer> q = new LinkedList<>();
-        for(Integer key : graph.keySet())
-        {
-            color.put(key,-1);
-        }
+        visited.put(root,true);
+        stack.put(root,true);
 
-        for(Integer key : color.keySet())
+        for(Integer child : graph.get(root))
         {
-            if(color.get(key)==-1)
+            if(!visited.get(child))
             {
-                q.add(key);
-                color.put(key,0);
-
-                while(!q.isEmpty())
-                {
-                    int curr = q.remove();
-
-                    for(Integer child : graph.get(curr))
-                    {
-                        if(color.get(child)==-1)
-                        {
-                            int nextColor = (color.get(curr)==0)?1 : 0;
-                            color.put(child,nextColor);
-                            q.add(child);
-                        }
-                        else if(color.get(child)==color.get(curr))
-                        {
-                            return false;
-                        }
-                    }
-                }
+                if(isCycleUtil(graph,visited,stack,child)) return true;
+            }
+            else if(visited.get(child) && stack.get(child))
+            {
+                return true;
             }
         }
-        return true;
+        stack.put(root,false);
+        return false;
+    }
+
+    public static boolean isCycle(HashMap<Integer,ArrayList<Integer>> graph)
+    {
+        HashMap<Integer,Boolean> visited = new HashMap<>();
+        HashMap<Integer,Boolean> stack = new HashMap<>();
+        for(Integer key : graph.keySet())
+        {
+            visited.put(key,false);
+            stack.put(key,false);
+        }
+
+        for(Integer key : visited.keySet())
+        {
+            if(!visited.get(key))
+            {
+                if(isCycleUtil(graph,visited,stack,key)) return true;
+            }
+        }
+        return false;
     }
 
     public static void main(String[] args) {
-    HashMap<Integer,ArrayList<Integer>> graph = new HashMap<>();
+        HashMap<Integer,ArrayList<Integer>> graph = new HashMap<>();
 
-    graphMap(graph);
+        graphMap(graph);
 
-        System.out.println("Graph is bipartite = "+ bipartite(graph));
+        System.out.println("Cycle detected = "+ isCycle(graph));
 
     }
 
