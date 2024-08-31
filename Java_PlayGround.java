@@ -2,25 +2,6 @@ import java.util.*;
 
 public class Java_PlayGround{
 
-
-    public static boolean cycleDetectionUtil(HashMap<Integer,ArrayList<Integer>> graph,int root,HashMap<Integer,Boolean> visited,int parent)
-    {
-        System.out.println(root);
-        visited.put(root,true);
-        for(Integer child : graph.get(root))
-        {
-            if(!visited.get(child)){
-                if(cycleDetectionUtil(graph,child,visited,root)) return true;
-            }
-            else if(visited.get(child) && child!=parent) {
-                System.out.print(child + " " + parent);
-                return true;
-            }
-        }
-        return false;
-    }
-
-
     public static void graphMap(HashMap<Integer,ArrayList<Integer>> graph)
     {
         int V,E;
@@ -48,25 +29,43 @@ public class Java_PlayGround{
         }
     }
 
-
-    public static boolean cycleDetection(HashMap<Integer,ArrayList<Integer>> graph)
+    public static boolean bipartite(HashMap<Integer,ArrayList<Integer>> graph)
     {
-        HashMap<Integer,Boolean> visited = new HashMap<>();
-
-        for(Integer keys : graph.keySet())
-        {
-            visited.put(keys,false);
-        }
-
+        HashMap<Integer,Integer> color = new HashMap<>();
+        Queue<Integer> q = new LinkedList<>();
         for(Integer key : graph.keySet())
         {
-            if(!visited.get(key))
+            color.put(key,-1);
+        }
+
+        for(Integer key : color.keySet())
+        {
+            if(color.get(key)==-1)
             {
-                if(cycleDetectionUtil(graph,key,visited,-1)) return true;
+                q.add(key);
+                color.put(key,0);
+
+                while(!q.isEmpty())
+                {
+                    int curr = q.remove();
+
+                    for(Integer child : graph.get(curr))
+                    {
+                        if(color.get(child)==-1)
+                        {
+                            int nextColor = (color.get(curr)==0)?1 : 0;
+                            color.put(child,nextColor);
+                            q.add(child);
+                        }
+                        else if(color.get(child)==color.get(curr))
+                        {
+                            return false;
+                        }
+                    }
+                }
             }
         }
-        return false;
- 
+        return true;
     }
 
     public static void main(String[] args) {
@@ -74,7 +73,7 @@ public class Java_PlayGround{
 
     graphMap(graph);
 
-        System.out.println("Cycle exits = "+ cycleDetection(graph));
+        System.out.println("Graph is bipartite = "+ bipartite(graph));
 
     }
 
