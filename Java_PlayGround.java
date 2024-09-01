@@ -87,47 +87,39 @@ public class Java_PlayGround{
 
     }
 
-    public static void dijkstrasAlgo(HashMap<Integer,ArrayList<Edge>> graph,int source)
+    public static void ballmenfordAlgo(HashMap<Integer,ArrayList<Edge>> graph,int source)
     {
         HashMap<Integer,Integer> distance = new HashMap<>();
-        HashMap<Integer,Boolean> visited = new HashMap<>();
-        PriorityQueue<Edge> pq = new PriorityQueue<>();
 
         for(Integer key : graph.keySet())
         {
             distance.put(key,Integer.MAX_VALUE);
-            visited.put(key,false);
         }
         distance.put(source,0);
-        pq.add(new Edge(source,0));
+        int V = graph.size();
 
-        while(!pq.isEmpty())
+        for(int i=0; i<=V-1; i++)
         {
-            Edge vertex = pq.remove();
-
-            if(!visited.get(vertex.node))
-            {      
-                System.out.println(vertex.node +" = "+distance.get(vertex.node));
-                visited.put(vertex.node,true);
-
-                for(Edge child : graph.get(vertex.node))
+            for(Integer key : graph.keySet())
+            {
+                for(Edge child : graph.get(key))
                 {
-                    int u = vertex.node;
+                    int u = key;
                     int v = child.node;
                     int wt = child.weight;
                     int newDistance = distance.get(u)+wt;
-                    if( newDistance < distance.get(v))
+                    if(distance.get(u)!=Integer.MAX_VALUE && newDistance < distance.get(v))
                     {
                         distance.put(v,newDistance);
-                        pq.add(new Edge(v,newDistance));
                     }
                 }
             }
         }
 
-
-
-
+        for(Integer key : distance.keySet())
+        {
+            System.out.println(key + " = "+ distance.get(key));
+        }
     }
 
     public static void main(String[] args) {
@@ -135,7 +127,8 @@ public class Java_PlayGround{
 
         graphMap(graph);
 
-        dijkstrasAlgo(graph,0);
+        ballmenfordAlgo(graph,10);
+       
     }
 
 }
