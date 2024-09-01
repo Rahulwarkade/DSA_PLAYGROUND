@@ -4,12 +4,14 @@ public class Java_PlayGround{
 
     public static class Edge implements Comparable<Edge>
     {
-        int node;
+        int src;
+        int dest;
         int weight;
 
-        public Edge(int node,int weight)
+        public Edge(int src,int dest,int weight)
         {
-            this.node = node;
+            this.src = src;
+            this.dest = dest;
             this.weight = weight;
         }
 
@@ -42,8 +44,8 @@ public class Java_PlayGround{
             }
 
             if(x!=y){
-                graph.get(x).add(new Edge(y,z));
-            // graph.get(y).add(x);     
+                graph.get(x).add(new Edge(x,y,z));
+                graph.get(y).add(new Edge(y,x,z));     
             }
         }
     }   
@@ -59,10 +61,10 @@ public class Java_PlayGround{
             System.out.print(node + " ");
             for(Edge child : graph.get(node))
             {
-                if(!visited.get(child.node))
+                if(!visited.get(child.dest))
                 {
-                    q.add(child.node);
-                    visited.put(child.node,true);
+                    q.add(child.dest);
+                    visited.put(child.dest,true);
                 }
             }
         }
@@ -87,47 +89,56 @@ public class Java_PlayGround{
 
     }
 
-    public static void ballmenfordAlgo(HashMap<Integer,ArrayList<Edge>> graph,int source)
+
+    public static void primsAlgoUtil(HashMap<Integer,ArrayList<Edge>> graph,HashMap<Integer,Boolean> visited,int source)
     {
-        HashMap<Integer,Integer> distance = new HashMap<>();
+        PriorityQueue<Edge> pq = new PriorityQueue<>();
+        ArrayList<Edge> list = new ArrayList<>();
 
-        for(Integer key : graph.keySet())
-        {
-            distance.put(key,Integer.MAX_VALUE);
-        }
-        distance.put(source,0);
-        int V = graph.size();
+        pq.add(new Edge(source,source,0));
+        int finalCost = 0;
 
-        for(int i=0; i<=V-1; i++)
+        while(!pq.isEmpty())
         {
-            for(Integer key : graph.keySet())
+            Edge curr = pq.remove();
+
+            if(!visited.get(curr.dest))
             {
-                for(Edge child : graph.get(key))
+                visited.put(curr.dest,true);
+                list.add(new Edge(curr.src,curr.dest,curr.weight));
+                finalCost += curr.weight;
+
+                for(Edge child : graph.get(curr.dest))
                 {
-                    int u = key;
-                    int v = child.node;
-                    int wt = child.weight;
-                    int newDistance = distance.get(u)+wt;
-                    if(distance.get(u)!=Integer.MAX_VALUE && newDistance < distance.get(v))
-                    {
-                        distance.put(v,newDistance);
-                    }
+                    pq.add(child);
                 }
             }
         }
 
-        for(Integer key : distance.keySet())
+        System.out.println(finalCost);
+
+        for(Edge edge : list)
         {
-            System.out.println(key + " = "+ distance.get(key));
+            System.out.println(edge.src+"->"+edge.dest+" = "+edge.weight);
         }
     }
+    public static void primsAlgo(HashMap<Integer,ArrayList<Edge>> graph)
+    {
+        HashMap<Integer,Boolean> visited = new HashMap<>();
 
+        for(Integer key : graph.keySet())
+        {
+            visited.put(key,false);
+        }
+
+        primsAlgoUtil(graph,visited,10);
+    }
     public static void main(String[] args) {
         HashMap<Integer,ArrayList<Edge>> graph = new HashMap<>();
 
         graphMap(graph);
 
-        ballmenfordAlgo(graph,10);
+        primsAlgo(graph);
        
     }
 
