@@ -29,56 +29,38 @@ public class Java_PlayGround{
         }
     }
 
-    public static void indgreeUtil(HashMap<Integer,ArrayList<Integer>> graph,HashMap<Integer,Integer> indgree)
+    public static void getAllPathUtil(HashMap<Integer,ArrayList<Integer>> graph,int src,int dest, ArrayList<Integer> path)
     {
-        for(Integer key : graph.keySet())
+        path.add(src);
+        if(src == dest)
         {
-            indgree.put(key,0);
+            for(Integer value : path)
+                System.out.print(value+" ");
+            System.out.println();
+            return;
         }
 
-        for(Integer key : graph.keySet())
+        for(Integer child : graph.get(src))
         {
-            for(Integer child : graph.get(key))
-            {
-                indgree.put(child,indgree.get(child)+1);
-            }
+            getAllPathUtil(graph,child,dest,path);
+            path.remove(path.size()-1);
         }
-
     }
-    public static void topSort(HashMap<Integer,ArrayList<Integer>> graph)
+
+    public static void getAllPath(HashMap<Integer,ArrayList<Integer>> graph)
     {
-        HashMap<Integer,Integer> indgree = new HashMap<>();
-        indgreeUtil(graph,indgree);
+        int src = 50;
+        int dest = 24;
+        ArrayList<Integer> path = new ArrayList<>();
 
-        Queue<Integer> q = new LinkedList<>();
-        for(Integer val : indgree.keySet())
-        {
-            if(indgree.get(val)==0)
-            {
-                q.add(val);
-            }
-        }
-
-        while(!q.isEmpty())
-        {
-            int vertex = q.remove();
-            System.out.println(vertex);
-            for(Integer child : graph.get(vertex))
-            {
-                indgree.put(child,indgree.get(child)-1);
-                if(indgree.get(child)==0)
-                {
-                    q.add(child);
-                }
-            }
-        }
+        getAllPathUtil(graph,src,dest,path);
     }
     public static void main(String[] args) {
         HashMap<Integer,ArrayList<Integer>> graph = new HashMap<>();
 
         graphMap(graph);
 
-        topSort(graph);
+        getAllPath(graph);
 
     }
 
