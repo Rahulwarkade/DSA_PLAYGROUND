@@ -45,7 +45,7 @@ public class Java_PlayGround{
 
             if(x!=y){
                 graph.get(x).add(new Edge(x,y,z));
-                graph.get(y).add(new Edge(y,x,z));     
+                // graph.get(y).add(new Edge(y,x,z));     
             }
         }
     }   
@@ -89,56 +89,63 @@ public class Java_PlayGround{
 
     }
 
+    public static class Info{
+        int v;
+        int cost;
+        int stops;
 
-    public static void primsAlgoUtil(HashMap<Integer,ArrayList<Edge>> graph,HashMap<Integer,Boolean> visited,int source)
-    {
-        PriorityQueue<Edge> pq = new PriorityQueue<>();
-        ArrayList<Edge> list = new ArrayList<>();
-
-        pq.add(new Edge(source,source,0));
-        int finalCost = 0;
-
-        while(!pq.isEmpty())
+        public Info(int v,int cost,int stops)
         {
-            Edge curr = pq.remove();
+            this.v = v;
+            this.cost = cost;
+            this.stops = stops;
+        }
+    }
+    public static int cheapestFlight(HashMap<Integer,ArrayList<Edge>> graph,int src,int dest,int K)
+    {
+        Queue<Info> q = new LinkedList<>();
+        HashMap<Integer,Integer> distance = new HashMap<>();
 
-            if(!visited.get(curr.dest))
+        for(Integer key : graph.keySet())
+        {
+            distance.put(key,Integer.MAX_VALUE);
+        }
+
+        distance.put(src,0);
+        q.add(new Info(src,0,0));
+
+        while(!q.isEmpty())
+        {
+            Info curr = q.remove();
+
+            if(curr.stops>K) break;
+
+            for(Edge child : graph.get(curr.v))
             {
-                visited.put(curr.dest,true);
-                list.add(new Edge(curr.src,curr.dest,curr.weight));
-                finalCost += curr.weight;
-
-                for(Edge child : graph.get(curr.dest))
+                int u = child.src;
+                int v = child.dest;
+                int cost = child.weight;
+                int newCost = curr.cost+cost;
+                if(newCost<distance.get(v) && curr.stops<=K)
                 {
-                    pq.add(child);
+                    distance.put(v,newCost);
+                    q.add(new Info(v,newCost,curr.stops+1));
                 }
             }
         }
 
-        System.out.println(finalCost);
+        if(distance.get(dest)==Integer.MAX_VALUE) return -1;
 
-        for(Edge edge : list)
-        {
-            System.out.println(edge.src+"->"+edge.dest+" = "+edge.weight);
-        }
-    }
-    public static void primsAlgo(HashMap<Integer,ArrayList<Edge>> graph)
-    {
-        HashMap<Integer,Boolean> visited = new HashMap<>();
-
-        for(Integer key : graph.keySet())
-        {
-            visited.put(key,false);
-        }
-
-        primsAlgoUtil(graph,visited,10);
+        return distance.get(dest);
     }
     public static void main(String[] args) {
         HashMap<Integer,ArrayList<Edge>> graph = new HashMap<>();
 
         graphMap(graph);
 
-        primsAlgo(graph);
+        System.out.println(cheapestFlight(graph,0,3,1));
+
+        bfs(graph);
        
     }
 
