@@ -1,2 +1,7 @@
+<<<<<<< HEAD
 *.exe
 *.class
+=======
+*.class
+*.txt
+>>>>>>> main
